@@ -1,7 +1,13 @@
 # moodi
 
-원하는 스타일의 사진을 남기고 싶은 사용자와 촬영자를 연결하는 사진 촬영 예약 플랫폼입니다.
-자세한 제품/기술 명세는 [`docs/MVP_IMPLEMENTATION_SPEC.md`](docs/MVP_IMPLEMENTATION_SPEC.md)를 참고하세요.
+원하는 스타일의 사진을 남기고 싶은 사용자와, 자신의 스타일로 활동하는 촬영자를 연결하는 사진 촬영 예약 플랫폼입니다.
+
+개인 간 거래로는 확인하기 어려운 포트폴리오·후기·응답 상태 같은 신뢰 정보를 플랫폼 안에서 보여주고, 예약까지 한 흐름으로 이어지는 걸 목표로 합니다.
+
+## 문서
+
+- 제품/기술 명세: [`docs/MVP_IMPLEMENTATION_SPEC.md`](docs/MVP_IMPLEMENTATION_SPEC.md)
+- 진행하며 내린 결정과 그 이유: [`docs/decision-log.md`](docs/decision-log.md)
 
 ## 시작하기
 
@@ -21,6 +27,8 @@ npm run dev
 ```bash
 cp .env.example .env.local
 ```
+
+`SUPABASE_SERVICE_ROLE_KEY`는 서버 전용 키입니다. 절대 클라이언트 코드나 커밋에 노출하지 마세요.
 
 ## 기술 스택
 
