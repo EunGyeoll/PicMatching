@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { getPublicStorageUrl } from "@/lib/supabase/storage";
 import { intersectServiceIdsByLabels } from "@/lib/data/tags";
-import type { ServiceCard } from "@/types/domain";
+import type { MyServiceListItem, ServiceCard } from "@/types/domain";
 
 function toServiceCard(row: {
   id: string;
@@ -72,4 +72,28 @@ export async function getExploreServices(
 
   const { data } = await query;
   return (data ?? []).map(toServiceCard);
+}
+
+/** 촬영자 본인의 서비스 목록(비공개 포함)을 관리 화면용으로 반환합니다. */
+export async function getMyServices(
+  photographerId: string,
+): Promise<MyServiceListItem[]> {
+  const supabase = await createClient();
+
+  const { data } = await supabase
+    .from("shooting_services")
+    .select("id, title, price, duration_minutes, cover_image_path, is_published")
+    .eq("photographer_id", photographerId)
+    .order("created_at", { ascending: false });
+
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    title: row.title,
+    price: row.price,
+    durationMinutes: row.duration_minutes,
+    coverImageUrl: row.cover_image_path
+      ? getPublicStorageUrl("services", row.cover_image_path)
+      : null,
+    isPublished: row.is_published,
+  }));
 }

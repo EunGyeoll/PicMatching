@@ -265,10 +265,30 @@
 - **검증**: 실제 `@supabase/supabase-js` 클라이언트로 새 테스트 계정을 가입시켜 (1) `signUp` 응답에 세션이 즉시 포함되는지, (2) `email_confirmed_at`이 즉시 채워지는지, (3) 가입 직후 `signInWithPassword`로 정상 로그인되는지 확인 — 셋 다 통과. 테스트 계정은 `service_role`로 삭제해 정리함.
 - **재검토 시점**: 비밀번호 재설정 기능을 추가하거나, 정식 공개 런칭 시 이메일 인증을 다시 요구하고 싶을 때 — 그때는 커스텀 SMTP(Resend/SendGrid 등) 연결이 다시 필요함.
 
-## 25. 아직 결정하지 않은 것 (열린 질문)
+## 26. git 초기화 및 GitHub 연결
+
+배포를 위해 처음으로 git 저장소화. Public 저장소 사용, 사용자가 미리 만들어둔 `https://github.com/EunGyeoll/PicMatching`에 연결.
+
+- **비밀키 유출 확인**: `git add -A` 전에 `.gitignore`에 `.env*`(단 `.env.example` 제외)가 이미 포함돼 있는 걸 확인했고, 스테이징 결과에도 `.env.local`이 없는 것을 재확인함. `.env.example`은 실제 값 없이 빈 템플릿이라 커밋해도 안전. `SUPABASE_SERVICE_ROLE_KEY`가 Public 저장소에 올라가면 안 되므로 특히 신경 씀.
+- **원격 저장소가 완전히 비어있지 않았음**: 처음 push가 거부됨 — GitHub에서 저장소 생성 시 기본으로 추가되는 `README.md`(내용 "# PicMatching") 한 줄이 이미 있었음. `git pull --rebase`로 받아온 뒤 `README.md` 충돌만 발생(둘 다 새 파일로 추가해서 add/add 충돌) — 로컬의 더 완성된 README를 유지하되 제목만 "moodi"로 맞춰서 해결.
+- **커밋 작성자**: 전역 git 설정에 이미 `user.name`/`user.email`이 잡혀 있어 별도 설정 불필요.
+- **다음 단계**: Vercel 연동은 이 환경에 CLI(`gh`, `vercel`)가 없고 계정 인증도 대신할 수 없어 사용자가 직접 진행.
+
+## 28. 배포 후 실사용 중 발견된 placeholder 화면 수정 — 서비스 목록
+
+배포된 사이트에서 실제로 촬영자 등록 → 서비스 등록을 시도하던 중 발견. `/photographer/services`(nav의 "서비스" 탭이자 서비스 등록 완료 후 리다이렉트 대상)가 스캐폴딩 단계의 `RoutePlaceholder`("촬영 서비스 관리 화면 준비 중입니다")로 남아있었음 — `services/new`(등록 폼)는 실제로 동작했지만, 그 진입점이자 등록 후 도착지인 목록 화면이 막혀 있어 사실상 서비스 등록 기능 전체가 막힌 것과 같았음.
+
+- **`getMyServices(photographerId)`** (`src/lib/data/services.ts`) 추가 — 공개 여부와 무관하게 본인 서비스 전체를 반환(기존 `getFeaturedServices`/`getExploreServices`는 `is_published=true`만 노출하는 공개용이라 재사용 불가).
+- **`src/app/photographer/(dashboard)/services/page.tsx`**를 placeholder에서 실제 목록 화면으로 교체 — 커버 이미지, 제목, 가격/시간, 공개·비공개 배지, 상단에 "새 서비스 등록" 링크. 삭제·수정 액션은 이번 범위에 포함 안 함(수정 화면 `[id]/edit`은 여전히 placeholder — 아래 열린 질문에 남김).
+- **검증**: lint·타입체크·프로덕션 빌드 통과. 비로그인 상태로 해당 경로 요청 시 크래시 없이 로그인 페이지로 정상 리다이렉트되는 것 확인. DB에서 테스트 계정(test-photographer, 발행 서비스 2건)으로 실제 반환될 데이터 형태를 사전에 SQL로 대조.
+- **별개로 발견한 사소한 기존 이슈**: `(dashboard)/layout.tsx`의 인증 가드가 `requireAuthUser("/photographer/dashboard")`로 next 경로가 고정돼 있어서, 세션 만료 상태로 어느 탭에 있었든 재로그인 후 항상 대시보드로 돌아감(원래 있던 탭으로 안 돌아옴) — 이번 수정 범위 밖이라 손대지 않음.
+
+## 29. 아직 결정하지 않은 것 (열린 질문)
 
 - 로컬/배포 Node.js 버전을 22로 올릴지 여부.
 - 커스텀 SMTP 연결 — 비밀번호 재설정 기능 추가 또는 정식 런칭 시 필요(§24).
 - `btree_gist` 확장을 `public` 외 스키마로 이동할지 여부.
 - 브랜드명 "moodi"로 확정, 정사각형 마크("m")도 파비콘·앱 아이콘에 반영 완료(§22). 남은 건: 워드마크 SVG(`public/logo.svg`)의 텍스트(현재 Inter 지정)를 패스로 아웃라인 변환하거나 SVG 내부에 폰트를 임베드해, 뷰어 기기에 폰트가 없어도 항상 동일하게 보이도록 만드는 것.
 - 도메인·소셜 핸들 "moodi" 후보 선점 여부 — 이 환경은 인터넷 조회가 안 돼 확인 불가, 사용자가 직접 확인 필요.
+- **아직 placeholder로 남아있는 화면들**(스캐폴딩 단계 흔적, 확인 완료): `/photographer/dashboard`(대시보드 개요), `/photographer/services/[id]/edit`(서비스 수정), `/photographer/availability`(일정). 실사용 중 필요해지는 대로 처리.
+- 서비스 삭제/비공개 전환 액션 — 지금은 목록에서 조회만 가능하고 수정·삭제는 아직 없음(§28).

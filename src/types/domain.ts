@@ -25,6 +25,15 @@ export type RecentlyActivePhotographer = {
   hasRecentUpdate: boolean;
 };
 
+export type MyServiceListItem = {
+  id: string;
+  title: string;
+  price: number;
+  durationMinutes: number;
+  coverImageUrl: string | null;
+  isPublished: boolean;
+};
+
 export type ServiceDetail = {
   id: string;
   title: string;
