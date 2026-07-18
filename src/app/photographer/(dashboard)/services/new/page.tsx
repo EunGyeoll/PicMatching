@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { requireAuthUser } from "@/lib/supabase/auth";
 import { createClient } from "@/lib/supabase/server";
 import { getServiceTagOptions } from "@/lib/data/tags";
-import { ServiceForm } from "./service-form";
+import { ServiceForm } from "../service-form";
 
 export default async function PhotographerServiceNewPage() {
   const user = await requireAuthUser("/photographer/services/new");
@@ -20,5 +20,5 @@ export default async function PhotographerServiceNewPage() {
 
   const tagOptions = await getServiceTagOptions();
 
-  return <ServiceForm photographerId={user.id} tagOptions={tagOptions} />;
+  return <ServiceForm photographerId={user.id} tagOptions={tagOptions} mode="create" />;
 }

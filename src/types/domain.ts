@@ -34,6 +34,34 @@ export type MyServiceListItem = {
   isPublished: boolean;
 };
 
+export type ServiceEditData = {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  durationMinutes: number;
+  bufferAfterMinutes: number;
+  coverImagePath: string | null;
+  coverImageUrl: string | null;
+  isPublished: boolean;
+  inclusions: string | null;
+  areas: string[];
+  purposeTagIds: number[];
+  moodTagIds: number[];
+  retouchedPhotoCount: number | null;
+  providesRawFiles: boolean | null;
+  providesAllRawFiles: boolean | null;
+  deliveryDays: number | null;
+  maxParticipants: number | null;
+  allowsOutfitChange: boolean | null;
+  recommendedFor: string | null;
+  extraFeeConditions: string | null;
+  travelFee: number | null;
+  nightSurcharge: number | null;
+  weekendSurcharge: number | null;
+  notes: string | null;
+};
+
 export type ServiceDetail = {
   id: string;
   title: string;

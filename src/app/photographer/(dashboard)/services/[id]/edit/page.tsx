@@ -1,4 +1,8 @@
-import { RoutePlaceholder } from "@/app/_components/route-placeholder";
+import { notFound } from "next/navigation";
+import { requireAuthUser } from "@/lib/supabase/auth";
+import { getServiceForEdit } from "@/lib/data/services";
+import { getServiceTagOptions } from "@/lib/data/tags";
+import { ServiceForm } from "../../service-form";
 
 export default async function PhotographerServiceEditPage({
   params,
@@ -6,11 +10,23 @@ export default async function PhotographerServiceEditPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const user = await requireAuthUser(`/photographer/services/${id}/edit`);
+
+  const [service, tagOptions] = await Promise.all([
+    getServiceForEdit(user.id, id),
+    getServiceTagOptions(),
+  ]);
+
+  if (!service) {
+    notFound();
+  }
 
   return (
-    <RoutePlaceholder
-      title="촬영 서비스 수정 화면 준비 중입니다"
-      description={`서비스 ID: ${id} — 촬영 서비스 수정 폼은 이후 단계에서 구현됩니다.`}
+    <ServiceForm
+      photographerId={user.id}
+      tagOptions={tagOptions}
+      mode="edit"
+      initial={service}
     />
   );
 }

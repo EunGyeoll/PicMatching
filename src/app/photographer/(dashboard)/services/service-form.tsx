@@ -4,30 +4,46 @@ import { useActionState, useState } from "react";
 import { ImageUploader, type UploadedImage } from "@/components/upload/image-uploader";
 import { TagInput } from "@/components/form/tag-input";
 import { DURATION_OPTIONS } from "@/lib/validations/service";
-import { createServiceAction, type ServiceFormState } from "../actions";
+import type { ServiceEditData } from "@/types/domain";
+import {
+  createServiceAction,
+  updateServiceAction,
+  type ServiceFormState,
+} from "./actions";
 
 const initialState: ServiceFormState = {};
 
 export function ServiceForm({
   photographerId,
   tagOptions,
+  mode,
+  initial,
 }: {
   photographerId: string;
   tagOptions: {
     purpose: { id: number; label: string }[];
     mood: { id: number; label: string }[];
   };
+  mode: "create" | "edit";
+  initial?: ServiceEditData;
 }) {
-  const [state, formAction, pending] = useActionState(createServiceAction, initialState);
+  const action = mode === "edit" ? updateServiceAction : createServiceAction;
+  const [state, formAction, pending] = useActionState(action, initialState);
 
-  const [serviceId] = useState(() => crypto.randomUUID());
-  const [coverImage, setCoverImage] = useState<UploadedImage | null>(null);
-  const [duration, setDuration] = useState<number>(60);
-  const [customDuration, setCustomDuration] = useState(false);
-  const [areas, setAreas] = useState<string[]>([]);
-  const [purposeIds, setPurposeIds] = useState<number[]>([]);
-  const [moodIds, setMoodIds] = useState<number[]>([]);
-  const [isPublished, setIsPublished] = useState(true);
+  const [serviceId] = useState(() => initial?.id ?? crypto.randomUUID());
+  const [coverImage, setCoverImage] = useState<UploadedImage | null>(
+    initial?.coverImagePath && initial.coverImageUrl
+      ? { path: initial.coverImagePath, url: initial.coverImageUrl }
+      : null,
+  );
+  const [duration, setDuration] = useState<number>(initial?.durationMinutes ?? 60);
+  const [customDuration, setCustomDuration] = useState(
+    initial ? !DURATION_OPTIONS.includes(initial.durationMinutes as (typeof DURATION_OPTIONS)[number]) : false,
+  );
+  const [areas, setAreas] = useState<string[]>(initial?.areas ?? []);
+  const [purposeIds, setPurposeIds] = useState<number[]>(initial?.purposeTagIds ?? []);
+  const [moodIds, setMoodIds] = useState<number[]>(initial?.moodTagIds ?? []);
+  const [isPublished, setIsPublished] = useState(initial?.isPublished ?? true);
 
   function toggleId(list: number[], id: number, setList: (v: number[]) => void) {
     setList(list.includes(id) ? list.filter((v) => v !== id) : [...list, id]);
@@ -35,13 +51,15 @@ export function ServiceForm({
 
   return (
     <main className="mx-auto max-w-120 px-4 py-6 pb-28">
-      <h1 className="text-base font-bold text-stone-900">촬영 서비스 등록</h1>
+      <h1 className="text-base font-bold text-stone-900">
+        {mode === "edit" ? "촬영 서비스 수정" : "촬영 서비스 등록"}
+      </h1>
 
       <form action={formAction} className="mt-5 flex flex-col gap-6">
         <input type="hidden" name="serviceId" value={serviceId} />
         <input type="hidden" name="coverImagePath" value={coverImage?.path ?? ""} />
         <input type="hidden" name="durationMinutes" value={duration} />
-        <input type="hidden" name="bufferAfterMinutes" value={15} />
+        <input type="hidden" name="bufferAfterMinutes" value={initial?.bufferAfterMinutes ?? 15} />
         <input type="hidden" name="isPublished" value={isPublished ? "on" : ""} />
         {areas.map((area) => (
           <input key={area} type="hidden" name="areas" value={area} />
@@ -59,6 +77,7 @@ export function ServiceForm({
               name="title"
               required
               maxLength={60}
+              defaultValue={initial?.title}
               placeholder="예: 서울숲 자연광 감성 스냅"
               className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
             />
@@ -85,6 +104,7 @@ export function ServiceForm({
               type="number"
               min={0}
               required
+              defaultValue={initial?.price}
               placeholder="90000"
               className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
             />
@@ -140,6 +160,7 @@ export function ServiceForm({
               name="description"
               required
               rows={4}
+              defaultValue={initial?.description}
               placeholder="촬영 장소, 분위기, 진행 방식 등을 소개해주세요"
               className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
             />
@@ -149,6 +170,7 @@ export function ServiceForm({
             <textarea
               name="inclusions"
               rows={2}
+              defaultValue={initial?.inclusions ?? undefined}
               placeholder="예: 보정본 20장, 촬영 장소 이동 1회 포함"
               className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
             />
@@ -197,7 +219,7 @@ export function ServiceForm({
           </Field>
         </Section>
 
-        <details className="rounded-lg border border-stone-200 px-4 py-3">
+        <details className="rounded-lg border border-stone-200 px-4 py-3" open={mode === "edit"}>
           <summary className="cursor-pointer text-xs font-bold text-stone-500">
             선택 정보 더보기 (보정본 수 · 원본 제공 · 전달 기간 · 최대 인원 · 추가 비용 등)
           </summary>
@@ -207,15 +229,26 @@ export function ServiceForm({
                 name="retouchedPhotoCount"
                 type="number"
                 min={0}
+                defaultValue={initial?.retouchedPhotoCount ?? undefined}
                 className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
             <label className="flex items-center gap-2 text-xs text-stone-600">
-              <input type="checkbox" name="providesRawFiles" className="size-4" />
+              <input
+                type="checkbox"
+                name="providesRawFiles"
+                defaultChecked={initial?.providesRawFiles ?? false}
+                className="size-4"
+              />
               보정 전 원본 제공
             </label>
             <label className="flex items-center gap-2 text-xs text-stone-600">
-              <input type="checkbox" name="providesAllRawFiles" className="size-4" />
+              <input
+                type="checkbox"
+                name="providesAllRawFiles"
+                defaultChecked={initial?.providesAllRawFiles ?? false}
+                className="size-4"
+              />
               전체 원본 제공
             </label>
             <Field label="결과물 전달 기간 (일)">
@@ -223,6 +256,7 @@ export function ServiceForm({
                 name="deliveryDays"
                 type="number"
                 min={0}
+                defaultValue={initial?.deliveryDays ?? undefined}
                 className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
@@ -231,16 +265,23 @@ export function ServiceForm({
                 name="maxParticipants"
                 type="number"
                 min={1}
+                defaultValue={initial?.maxParticipants ?? undefined}
                 className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
             <label className="flex items-center gap-2 text-xs text-stone-600">
-              <input type="checkbox" name="allowsOutfitChange" className="size-4" />
+              <input
+                type="checkbox"
+                name="allowsOutfitChange"
+                defaultChecked={initial?.allowsOutfitChange ?? false}
+                className="size-4"
+              />
               의상 변경 가능
             </label>
             <Field label="추천 대상">
               <input
                 name="recommendedFor"
+                defaultValue={initial?.recommendedFor ?? undefined}
                 className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
@@ -248,6 +289,7 @@ export function ServiceForm({
               <textarea
                 name="extraFeeConditions"
                 rows={2}
+                defaultValue={initial?.extraFeeConditions ?? undefined}
                 className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
@@ -256,6 +298,7 @@ export function ServiceForm({
                 name="travelFee"
                 type="number"
                 min={0}
+                defaultValue={initial?.travelFee ?? undefined}
                 className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
@@ -264,6 +307,7 @@ export function ServiceForm({
                 name="nightSurcharge"
                 type="number"
                 min={0}
+                defaultValue={initial?.nightSurcharge ?? undefined}
                 className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
@@ -272,6 +316,7 @@ export function ServiceForm({
                 name="weekendSurcharge"
                 type="number"
                 min={0}
+                defaultValue={initial?.weekendSurcharge ?? undefined}
                 className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
@@ -279,6 +324,7 @@ export function ServiceForm({
               <textarea
                 name="notes"
                 rows={2}
+                defaultValue={initial?.notes ?? undefined}
                 className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>

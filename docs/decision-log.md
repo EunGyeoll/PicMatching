@@ -283,12 +283,24 @@
 - **검증**: lint·타입체크·프로덕션 빌드 통과. 비로그인 상태로 해당 경로 요청 시 크래시 없이 로그인 페이지로 정상 리다이렉트되는 것 확인. DB에서 테스트 계정(test-photographer, 발행 서비스 2건)으로 실제 반환될 데이터 형태를 사전에 SQL로 대조.
 - **별개로 발견한 사소한 기존 이슈**: `(dashboard)/layout.tsx`의 인증 가드가 `requireAuthUser("/photographer/dashboard")`로 next 경로가 고정돼 있어서, 세션 만료 상태로 어느 탭에 있었든 재로그인 후 항상 대시보드로 돌아감(원래 있던 탭으로 안 돌아옴) — 이번 수정 범위 밖이라 손대지 않음.
 
-## 29. 아직 결정하지 않은 것 (열린 질문)
+## 30. 서비스 수정 · 삭제 · 공개 전환 구현
+
+§28에서 목록 화면만 살려뒀던 것에 이어, 등록한 서비스를 실제로 관리(수정/삭제/공개 전환)할 수 있게 함.
+
+- **`ServiceForm`을 등록/수정 공용 컴포넌트로 리팩터링**(`services/new/service-form.tsx` → `services/service-form.tsx`로 이동). `mode: "create" | "edit"` + `initial?: ServiceEditData`로 분기 — edit일 때 `serviceId`를 새로 생성하지 않고 기존 id를 그대로 쓰고, 모든 필드에 `defaultValue`/`defaultChecked`로 기존 값을 채움.
+- **`updateServiceAction`** 추가 — `createServiceAction`과 동일한 검증(zod 스키마 재검증)을 거치되, 본인 소유(`photographer_id` 일치) 확인 후 UPDATE. 태그는 전체 삭제 후 재삽입(`syncServiceTags`, 온보딩 RPC의 `photographer_areas` full-replace 패턴과 동일 방식) — INSERT/UPDATE 중복 로직은 `toRow()` 헬퍼로 통합.
+- **`getServiceForEdit(photographerId, serviceId)`**(`src/lib/data/services.ts`) 추가 — 본인 소유가 아니면 `null` 반환, 수정 화면에서 `notFound()` 처리.
+- **`deleteServiceAction`**: `bookings.service_id → shooting_services.id`가 `ON DELETE RESTRICT`로 걸려 있어(예약 이력 보호 목적으로 이미 그렇게 설계돼 있었음) 예약 이력이 있는 서비스는 하드 삭제가 DB 레벨에서 막힘. Postgres 에러 코드 `23503`을 캐치해 "예약 이력이 있으면 비공개로 전환해달라"는 한국어 안내로 변환.
+- **`togglePublishAction`**: `is_published`만 바꾸는 가벼운 액션. 예약 이력이 있어 삭제가 막히는 서비스의 사실상 "삭제" 대안.
+- **`ServiceRowActions`**(client) — 목록의 각 서비스 행에 수정/공개·비공개 전환/삭제 텍스트 링크. 삭제는 `window.confirm()`으로 실수 방지.
+- **덤으로 발견해 고친 버그**: 기존 등록 폼에 "기타 안내사항"(`notes`) 입력란이 있었는데 `createServiceAction`의 insert 객체에 `notes` 필드가 빠져 있어서 사용자가 입력해도 저장되지 않고 조용히 사라지고 있었음(DB 컬럼은 이미 존재). `toRow()`로 통합하면서 같이 수정.
+- **검증**: lint·타입체크·프로덕션 빌드 통과. 실제 테스트 계정(test-photographer)으로 `@supabase/supabase-js` 클라이언트를 통해 (1) 공개 여부 토글 양방향 성공, (2) 예약 이력이 있는 서비스 삭제 시도 시 정확히 `23503`으로 막히는 것, (3) 예약 이력이 없는 임시 서비스는 생성 후 삭제까지 정상 동작하고 실제로 행이 사라지는 것까지 DB에서 직접 확인. 테스트로 만든 임시 서비스는 스스로 삭제되어 잔여 데이터 없음.
+
+## 31. 아직 결정하지 않은 것 (열린 질문)
 
 - 로컬/배포 Node.js 버전을 22로 올릴지 여부.
 - 커스텀 SMTP 연결 — 비밀번호 재설정 기능 추가 또는 정식 런칭 시 필요(§24).
 - `btree_gist` 확장을 `public` 외 스키마로 이동할지 여부.
 - 브랜드명 "moodi"로 확정, 정사각형 마크("m")도 파비콘·앱 아이콘에 반영 완료(§22). 남은 건: 워드마크 SVG(`public/logo.svg`)의 텍스트(현재 Inter 지정)를 패스로 아웃라인 변환하거나 SVG 내부에 폰트를 임베드해, 뷰어 기기에 폰트가 없어도 항상 동일하게 보이도록 만드는 것.
 - 도메인·소셜 핸들 "moodi" 후보 선점 여부 — 이 환경은 인터넷 조회가 안 돼 확인 불가, 사용자가 직접 확인 필요.
-- **아직 placeholder로 남아있는 화면들**(스캐폴딩 단계 흔적, 확인 완료): `/photographer/dashboard`(대시보드 개요), `/photographer/services/[id]/edit`(서비스 수정), `/photographer/availability`(일정). 실사용 중 필요해지는 대로 처리.
-- 서비스 삭제/비공개 전환 액션 — 지금은 목록에서 조회만 가능하고 수정·삭제는 아직 없음(§28).
+- **아직 placeholder로 남아있는 화면들**: `/photographer/dashboard`(대시보드 개요), `/photographer/availability`(일정). 실사용 중 필요해지는 대로 처리.

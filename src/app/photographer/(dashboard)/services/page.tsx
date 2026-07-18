@@ -3,6 +3,7 @@ import Image from "next/image";
 import { requireAuthUser } from "@/lib/supabase/auth";
 import { getMyServices } from "@/lib/data/services";
 import { EmptyState } from "@/components/common/empty-state";
+import { ServiceRowActions } from "./service-row-actions";
 
 export default async function PhotographerServicesPage() {
   const user = await requireAuthUser("/photographer/services");
@@ -62,6 +63,7 @@ export default async function PhotographerServicesPage() {
                 <div className="text-[11px] text-stone-400">
                   {service.price.toLocaleString()}원 · {service.durationMinutes}분
                 </div>
+                <ServiceRowActions serviceId={service.id} isPublished={service.isPublished} />
               </div>
             </div>
           ))}

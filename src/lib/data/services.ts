@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { getPublicStorageUrl } from "@/lib/supabase/storage";
 import { intersectServiceIdsByLabels } from "@/lib/data/tags";
-import type { MyServiceListItem, ServiceCard } from "@/types/domain";
+import type { MyServiceListItem, ServiceCard, ServiceEditData } from "@/types/domain";
 
 function toServiceCard(row: {
   id: string;
@@ -96,4 +96,65 @@ export async function getMyServices(
       : null,
     isPublished: row.is_published,
   }));
+}
+
+/** 본인 소유 서비스 하나를 수정 화면에 채울 형태로 반환합니다. 소유자가 아니면 null. */
+export async function getServiceForEdit(
+  photographerId: string,
+  serviceId: string,
+): Promise<ServiceEditData | null> {
+  const supabase = await createClient();
+
+  const { data } = await supabase
+    .from("shooting_services")
+    .select(
+      `id, title, description, price, duration_minutes, buffer_after_minutes,
+       cover_image_path, is_published, inclusions, areas,
+       retouched_photo_count, provides_raw_files, provides_all_raw_files,
+       delivery_days, max_participants, allows_outfit_change, recommended_for,
+       extra_fee_conditions, travel_fee, night_surcharge, weekend_surcharge, notes,
+       photographer_service_tags(service_tags(id, category))`,
+    )
+    .eq("id", serviceId)
+    .eq("photographer_id", photographerId)
+    .maybeSingle();
+
+  if (!data) return null;
+
+  const purposeTagIds = data.photographer_service_tags
+    .filter((t) => t.service_tags?.category === "purpose")
+    .map((t) => t.service_tags!.id);
+  const moodTagIds = data.photographer_service_tags
+    .filter((t) => t.service_tags?.category === "mood")
+    .map((t) => t.service_tags!.id);
+
+  return {
+    id: data.id,
+    title: data.title,
+    description: data.description,
+    price: data.price,
+    durationMinutes: data.duration_minutes,
+    bufferAfterMinutes: data.buffer_after_minutes,
+    coverImagePath: data.cover_image_path,
+    coverImageUrl: data.cover_image_path
+      ? getPublicStorageUrl("services", data.cover_image_path)
+      : null,
+    isPublished: data.is_published,
+    inclusions: data.inclusions,
+    areas: data.areas,
+    purposeTagIds,
+    moodTagIds,
+    retouchedPhotoCount: data.retouched_photo_count,
+    providesRawFiles: data.provides_raw_files,
+    providesAllRawFiles: data.provides_all_raw_files,
+    deliveryDays: data.delivery_days,
+    maxParticipants: data.max_participants,
+    allowsOutfitChange: data.allows_outfit_change,
+    recommendedFor: data.recommended_for,
+    extraFeeConditions: data.extra_fee_conditions,
+    travelFee: data.travel_fee,
+    nightSurcharge: data.night_surcharge,
+    weekendSurcharge: data.weekend_surcharge,
+    notes: data.notes,
+  };
 }
