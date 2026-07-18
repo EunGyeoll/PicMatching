@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { ImageUploader, type UploadedImage } from "@/components/upload/image-uploader";
 import { TagInput } from "@/components/form/tag-input";
@@ -32,6 +33,8 @@ export function OnboardingWizard({
   initialContactInfo,
   initialPortfolio,
 }: Props) {
+  const router = useRouter();
+  const isEdit = initialDisplayName.length > 0;
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
@@ -69,7 +72,11 @@ export function OnboardingWizard({
 
   function goBack() {
     setError(null);
-    if (step > 1) setStep((s) => (s - 1) as 1 | 2 | 3);
+    if (step > 1) {
+      setStep((s) => (s - 1) as 1 | 2 | 3);
+    } else {
+      router.back();
+    }
   }
 
   async function handleSubmit() {
@@ -104,17 +111,17 @@ export function OnboardingWizard({
     <main className="mx-auto flex min-h-dvh max-w-120 flex-col pb-24">
       <div className="border-b border-stone-200 px-4 py-3">
         <div className="flex items-center gap-2">
-          {step > 1 ? (
-            <button
-              type="button"
-              onClick={goBack}
-              aria-label="이전 단계"
-              className="-ml-2 flex size-11 items-center justify-center text-stone-400"
-            >
-              <ChevronLeft className="size-5" />
-            </button>
-          ) : null}
-          <span className="text-sm font-bold text-stone-900">촬영자 등록</span>
+          <button
+            type="button"
+            onClick={goBack}
+            aria-label={step > 1 ? "이전 단계" : "나가기"}
+            className="-ml-2 flex size-11 items-center justify-center text-stone-400"
+          >
+            <ChevronLeft className="size-5" />
+          </button>
+          <span className="text-sm font-bold text-stone-900">
+            {isEdit ? "촬영자 정보 수정" : "촬영자 등록"}
+          </span>
         </div>
         <div className="mt-2.5 flex gap-1">
           {[1, 2, 3].map((i) => (
@@ -232,10 +239,18 @@ export function OnboardingWizard({
               disabled={pending}
               className="w-full rounded-lg bg-stone-900 py-3.5 text-sm font-bold text-white disabled:opacity-40"
             >
-              {pending ? "등록 중..." : "등록 완료"}
+              {isEdit
+                ? pending
+                  ? "저장 중..."
+                  : "수정 완료"
+                : pending
+                  ? "등록 중..."
+                  : "등록 완료"}
             </button>
             <p className="mt-2 text-center text-[10.5px] text-stone-400">
-              완료 후 마이페이지에서 촬영자 모드로 전환할 수 있어요
+              {isEdit
+                ? "수정한 내용은 촬영자 상세 화면에 바로 반영돼요"
+                : "완료 후 마이페이지에서 촬영자 모드로 전환할 수 있어요"}
             </p>
           </>
         )}

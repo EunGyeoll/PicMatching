@@ -7,6 +7,7 @@ const NAV_ITEMS = [
   { href: "/photographer/availability", label: "일정" },
   { href: "/photographer/portfolio", label: "포트폴리오" },
   { href: "/photographer/services", label: "서비스" },
+  { href: "/photographer/onboarding", label: "촬영자 정보" },
   { href: "/mypage", label: "프로필" },
 ];
 
