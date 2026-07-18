@@ -1,24 +1,48 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
+import { ImageUploader, type UploadedImage } from "@/components/upload/image-uploader";
 import { updateProfileAction, type ProfileFormState } from "./actions";
 
 const initialState: ProfileFormState = {};
 
 export function EditProfileForm({
+  userId,
   defaultNickname,
   defaultPhone,
+  defaultAvatar,
 }: {
+  userId: string;
   defaultNickname: string;
   defaultPhone: string;
+  defaultAvatar: UploadedImage | null;
 }) {
   const [state, formAction, pending] = useActionState(
     updateProfileAction,
     initialState,
   );
+  const [avatar, setAvatar] = useState<UploadedImage | null>(defaultAvatar);
 
   return (
     <form action={formAction} className="mt-8 flex flex-col gap-5">
+      <input type="hidden" name="avatarUrl" value={avatar?.url ?? ""} />
+
+      <div className="flex flex-col gap-1.5">
+        <span className="text-sm font-medium text-stone-700">프로필 사진</span>
+        <ImageUploader
+          bucket="avatars"
+          shape="circle"
+          maxFiles={1}
+          images={avatar ? [avatar] : []}
+          onAdd={setAvatar}
+          onRemove={() => setAvatar(null)}
+          buildPath={(file) => {
+            const ext = file.name.split(".").pop() ?? "jpg";
+            return `${userId}/profile.${ext}`;
+          }}
+        />
+      </div>
+
       <div className="flex flex-col gap-1.5">
         <label htmlFor="nickname" className="text-sm font-medium text-stone-700">
           닉네임

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getAuthUser } from "@/lib/supabase/auth";
 import { createClient } from "@/lib/supabase/server";
 import { signOutAction } from "./actions";
@@ -42,10 +43,29 @@ export default async function MyPage() {
 
   return (
     <main className="mx-auto min-h-dvh max-w-120 px-6 py-10">
-      <h1 className="wrap-break-word text-xl font-semibold text-stone-900">
-        {profile?.nickname ?? "내 정보"}
-      </h1>
-      <p className="mt-1 text-sm text-stone-500">{user.email}</p>
+      <div className="flex items-center gap-3">
+        <div className="relative size-14 shrink-0 overflow-hidden rounded-full bg-stone-100">
+          {profile?.avatar_url ? (
+            <Image
+              src={profile.avatar_url}
+              alt=""
+              fill
+              sizes="56px"
+              className="object-cover"
+            />
+          ) : (
+            <span className="flex size-full items-center justify-center text-lg font-semibold text-stone-400">
+              {(profile?.nickname ?? "?").slice(0, 1)}
+            </span>
+          )}
+        </div>
+        <div className="min-w-0">
+          <h1 className="wrap-break-word text-xl font-semibold text-stone-900">
+            {profile?.nickname ?? "내 정보"}
+          </h1>
+          <p className="mt-1 text-sm text-stone-500">{user.email}</p>
+        </div>
+      </div>
 
       <nav className="mt-8 flex flex-col divide-y divide-stone-200 border-y border-stone-200">
         {menuItems.map((item) => (

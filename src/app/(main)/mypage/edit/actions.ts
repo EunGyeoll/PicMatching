@@ -19,6 +19,7 @@ export async function updateProfileAction(
   const parsed = profileUpdateSchema.safeParse({
     nickname: formData.get("nickname"),
     phone: formData.get("phone"),
+    avatarUrl: formData.get("avatarUrl"),
   });
 
   if (!parsed.success) {
@@ -31,6 +32,7 @@ export async function updateProfileAction(
     .update({
       nickname: parsed.data.nickname,
       phone: parsed.data.phone || null,
+      avatar_url: parsed.data.avatarUrl || null,
     })
     .eq("id", user.id);
 

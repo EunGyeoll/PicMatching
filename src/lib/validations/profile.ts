@@ -12,4 +12,5 @@ export const profileUpdateSchema = z.object({
     .max(20, "연락처는 20자 이하여야 합니다.")
     .optional()
     .or(z.literal("")),
+  avatarUrl: z.string().trim().url().optional().or(z.literal("")),
 });
