@@ -330,7 +330,16 @@
 - **소급 복원은 하지 않음** — 이전 변경들은 이 폴더에 없고, 계속 이 문서(§1~33)가 유일한 기록. `supabase/migrations/README.md`에 이 경계를 명시해둠.
 - Supabase CLI(`supabase db push`/`pull`)는 아직 이 환경에 없어서 로컬 재생 워크플로까지는 안 갖춰짐 — 지금은 이력 추적·리뷰 목적으로만 파일을 남기는 단계.
 
-## 35. 아직 결정하지 않은 것 (열린 질문)
+## 35. 전체 폰트를 Pretendard로 적용
+
+지금까지 폰트 지정이 아예 없어서 Tailwind 기본값(OS별 시스템 UI 폰트: Windows는 맑은 고딕, macOS/iOS는 Apple SD Gothic Neo 등)에 의존하고 있었음 — 기기마다 다르게 보이는 문제. `Pretendard`는 Google Fonts에 없어서 `next/font/google`로는 못 불러오고, `next/font/local`로 직접 호스팅.
+
+- `npm install pretendard`(1.3.9, 버전 고정) — 이 오픈소스 패키지가 woff2 폰트 파일 자체를 담고 있어서 별도로 폰트 파일을 구할 필요 없음(이 환경엔 인터넷 접근이 없어 npm 레지스트리 접근이 되는지 먼저 확인하고 진행).
+- **가변 폰트 파일 하나만 사용**(`PretendardVariable.woff2`, weight `45–920` 전체를 커버) — 굵기별로 여러 파일을 안 받아도 됨. `src/app/layout.tsx`에서 `next/font/local`로 로드해 `--font-pretendard` CSS 변수로 노출, `<html>`에 적용.
+- **Tailwind v4는 설정 파일이 없어서** `globals.css`의 `@theme` 블록에 `--font-sans: var(--font-pretendard), -apple-system, ..., sans-serif;`를 정의해 기본 sans 폰트 자체를 교체 — Tailwind preflight가 `--font-sans`를 `html`에 기본 적용하는 걸 확인하고 이 방식을 씀(별도로 폰트 클래스를 여기저기 안 붙여도 전체에 적용됨).
+- **검증**: lint·타입체크·프로덕션 빌드 통과. 개발 서버로 실제 컴파일된 CSS에서 `--font-sans`가 `--font-pretendard`를 참조하는 것, `@font-face`가 실제 자체 호스팅된 woff2 경로를 가리키는 것, 그 폰트 파일이 200으로 서빙되는 것까지 확인.
+
+## 36. 아직 결정하지 않은 것 (열린 질문)
 
 - 로컬/배포 Node.js 버전을 22로 올릴지 여부.
 - 커스텀 SMTP 연결 — 비밀번호 재설정 기능 추가 또는 정식 런칭 시 필요(§24).

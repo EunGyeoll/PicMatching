@@ -1,1 +1,7 @@
 @import "tailwindcss";
+
+@theme {
+  --font-sans:
+    var(--font-pretendard), -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+    "Malgun Gothic", sans-serif;
+}
