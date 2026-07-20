@@ -2,15 +2,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { Search } from "lucide-react";
 import { getFeaturedServices } from "@/lib/data/services";
-import { getServiceTagsByCategory, getMoodDiscoveryTiles } from "@/lib/data/tags";
+import { getMoodDiscoveryTiles } from "@/lib/data/tags";
 import { getRecentlyActivePhotographers } from "@/lib/data/photographers";
 import { ServiceCard } from "@/components/photo/service-card";
 import { PhotographerStoryTray } from "@/components/photo/photographer-story-tray";
 
 export default async function Home() {
-  const [featuredServices, tags, recentPhotographers, moodTiles] = await Promise.all([
+  const [featuredServices, recentPhotographers, moodTiles] = await Promise.all([
     getFeaturedServices(10),
-    getServiceTagsByCategory(),
     getRecentlyActivePhotographers(12),
     getMoodDiscoveryTiles(6),
   ]);
@@ -29,24 +28,6 @@ export default async function Home() {
       </div>
 
       <PhotographerStoryTray photographers={recentPhotographers} />
-
-      <div className="flex gap-1.5 overflow-x-auto px-4 pb-1">
-        <Link
-          href="/explore"
-          className="shrink-0 whitespace-nowrap rounded-full border border-stone-800 bg-stone-800 px-3 py-1.5 text-[11.5px] font-semibold text-white"
-        >
-          전체
-        </Link>
-        {tags.purpose.map((label) => (
-          <Link
-            key={label}
-            href={`/explore?purpose=${encodeURIComponent(label)}`}
-            className="shrink-0 whitespace-nowrap rounded-full border border-stone-200 px-3 py-1.5 text-[11.5px] text-stone-600"
-          >
-            {label}
-          </Link>
-        ))}
-      </div>
 
       <section className="flex flex-col gap-2.5 px-4 py-5">
         <h2 className="text-sm font-bold text-stone-900">지금 만나볼 수 있는 촬영</h2>

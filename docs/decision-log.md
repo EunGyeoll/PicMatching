@@ -372,3 +372,9 @@
 - `ImageUploader`(`components/upload/image-uploader.tsx`)는 업로드 직후 미리보기도 같은 문제를 겪을 수 있어(같은 세션 안에서 사진을 지웠다 다시 올리는 경우), `onAdd`로 넘기는 URL에 업로드 시각(`Date.now()`)을 붙임 — DB에는 영향 없는 `path`만 저장되고 `url`은 화면 표시용이라 안전.
 - **부수 확인**: 유저 프로필 사진(`avatars` 버킷)도 같은 `ImageUploader`를 쓰는데, 이건 `avatar_url`에 URL 전체(캐시 무효화 쿼리스트링 포함)를 그대로 저장하는 방식이라(§31), `mypage/edit/page.tsx`가 저장된 URL에서 경로를 다시 뽑아낼 때 쿼리스트링까지 같이 뽑혀버리는 부작용이 있었음 — `.split("?")[0]`으로 방어 처리. (포트폴리오 사진은 `path`만 저장하는 방식이라 영향 없음.)
 - **검증**: lint·타입체크·프로덕션 빌드 통과. 개발 서버로 홈 화면 HTML을 직접 확인해 서비스 커버 이미지 URL에 `?v=<updated_at>`이 실제로 붙는 것 확인.
+
+## 40. 홈 화면 스토리 바 밑 카테고리(목적) 칩 행 제거
+
+- 홈 화면(`(main)/page.tsx`)에서 `PhotographerStoryTray`와 "지금 만나볼 수 있는 촬영" 사이에 있던 목적 칩 행(`전체` + `tags.purpose` 매핑)을 제거.
+- 이 칩 행에만 쓰이던 `getServiceTagsByCategory()` 호출도 같이 제거(다른 곳에서 안 쓰임).
+- **검증**: lint·타입체크·프로덕션 빌드 통과.
