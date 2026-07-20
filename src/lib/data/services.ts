@@ -9,6 +9,7 @@ function toServiceCard(row: {
   price: number;
   duration_minutes: number;
   cover_image_path: string | null;
+  updated_at: string;
   photographer_id: string;
   areas: string[];
   photographer_profiles: { display_name: string } | null;
@@ -19,7 +20,7 @@ function toServiceCard(row: {
     price: row.price,
     durationMinutes: row.duration_minutes,
     coverImageUrl: row.cover_image_path
-      ? getPublicStorageUrl("services", row.cover_image_path)
+      ? getPublicStorageUrl("services", row.cover_image_path, row.updated_at)
       : null,
     photographerId: row.photographer_id,
     photographerName: row.photographer_profiles?.display_name ?? "",
@@ -33,7 +34,7 @@ export async function getFeaturedServices(limit = 10): Promise<ServiceCard[]> {
   const { data } = await supabase
     .from("shooting_services")
     .select(
-      "id, title, price, duration_minutes, cover_image_path, photographer_id, areas, photographer_profiles!inner(display_name)",
+      "id, title, price, duration_minutes, cover_image_path, updated_at, photographer_id, areas, photographer_profiles!inner(display_name)",
     )
     .eq("is_published", true)
     .order("created_at", { ascending: false })
@@ -61,7 +62,7 @@ export async function getExploreServices(
   let query = supabase
     .from("shooting_services")
     .select(
-      "id, title, price, duration_minutes, cover_image_path, photographer_id, areas, photographer_profiles!inner(display_name)",
+      "id, title, price, duration_minutes, cover_image_path, updated_at, photographer_id, areas, photographer_profiles!inner(display_name)",
     )
     .eq("is_published", true)
     .order("created_at", { ascending: false });
@@ -82,7 +83,7 @@ export async function getMyServices(
 
   const { data } = await supabase
     .from("shooting_services")
-    .select("id, title, price, duration_minutes, cover_image_path, is_published")
+    .select("id, title, price, duration_minutes, cover_image_path, updated_at, is_published")
     .eq("photographer_id", photographerId)
     .order("created_at", { ascending: false });
 
@@ -92,7 +93,7 @@ export async function getMyServices(
     price: row.price,
     durationMinutes: row.duration_minutes,
     coverImageUrl: row.cover_image_path
-      ? getPublicStorageUrl("services", row.cover_image_path)
+      ? getPublicStorageUrl("services", row.cover_image_path, row.updated_at)
       : null,
     isPublished: row.is_published,
   }));
@@ -109,7 +110,7 @@ export async function getServiceForEdit(
     .from("shooting_services")
     .select(
       `id, title, description, price, duration_minutes, buffer_after_minutes,
-       cover_image_path, is_published, inclusions, areas,
+       cover_image_path, updated_at, is_published, inclusions, areas,
        retouched_photo_count, provides_raw_files, provides_all_raw_files,
        delivery_days, max_participants, allows_outfit_change, recommended_for,
        extra_fee_conditions, travel_fee, night_surcharge, weekend_surcharge, notes,
@@ -137,7 +138,7 @@ export async function getServiceForEdit(
     bufferAfterMinutes: data.buffer_after_minutes,
     coverImagePath: data.cover_image_path,
     coverImageUrl: data.cover_image_path
-      ? getPublicStorageUrl("services", data.cover_image_path)
+      ? getPublicStorageUrl("services", data.cover_image_path, data.updated_at)
       : null,
     isPublished: data.is_published,
     inclusions: data.inclusions,

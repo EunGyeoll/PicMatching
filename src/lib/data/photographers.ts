@@ -152,7 +152,7 @@ export async function getPhotographerDetail(
       supabase
         .from("shooting_services")
         .select(
-          `id, title, description, price, duration_minutes, cover_image_path,
+          `id, title, description, price, duration_minutes, cover_image_path, updated_at,
            inclusions, retouched_photo_count, provides_raw_files, delivery_days,
            max_participants, extra_fee_conditions,
            photographer_service_tags(service_tags(label))`,
@@ -174,7 +174,7 @@ export async function getPhotographerDetail(
     price: s.price,
     durationMinutes: s.duration_minutes,
     coverImageUrl: s.cover_image_path
-      ? getPublicStorageUrl("services", s.cover_image_path)
+      ? getPublicStorageUrl("services", s.cover_image_path, s.updated_at)
       : null,
     inclusions: s.inclusions,
     retouchedPhotoCount: s.retouched_photo_count,

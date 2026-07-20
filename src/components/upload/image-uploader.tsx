@@ -70,7 +70,9 @@ export function ImageUploader({
       }
 
       const { data } = supabase.storage.from(bucket).getPublicUrl(path);
-      onAdd({ path, url: data.publicUrl });
+      // 같은 경로에 덮어쓴 경우에도 Next.js Image 캐시가 이전 이미지를 그대로 보여주지
+      // 않도록, 업로드 시각을 붙여 매번 새로운 URL을 만든다.
+      onAdd({ path, url: `${data.publicUrl}?v=${Date.now()}` });
     }
     setUploading(false);
     if (inputRef.current) inputRef.current.value = "";

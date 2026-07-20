@@ -58,7 +58,7 @@ export async function getMoodDiscoveryTiles(limit = 6): Promise<MoodDiscoveryTil
     .select(
       `label,
        photographer_service_tags!inner(
-         shooting_services!inner(cover_image_path, is_published, created_at)
+         shooting_services!inner(cover_image_path, is_published, created_at, updated_at)
        )`,
     )
     .eq("category", "mood")
@@ -77,7 +77,11 @@ export async function getMoodDiscoveryTiles(limit = 6): Promise<MoodDiscoveryTil
 
     tiles.push({
       label: tag.label,
-      photoUrl: getPublicStorageUrl("services", services[0].cover_image_path!),
+      photoUrl: getPublicStorageUrl(
+        "services",
+        services[0].cover_image_path!,
+        services[0].updated_at,
+      ),
     });
 
     if (tiles.length >= limit) break;

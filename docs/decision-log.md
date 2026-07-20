@@ -362,3 +362,13 @@
 
 - **수정**: `ServiceForm`(`services/service-form.tsx`)에서 `areas`/`purposeIds`/`moodIds`/`duration`/`coverImage`/`isPublished`처럼 이미 제어형(state 기반)으로 관리되던 것 외에, 나머지 16개 텍스트·숫자·체크박스 필드(제목/가격/설명/포함사항/보정본 수/원본 제공 여부 등)를 전부 `fields` state 객체 하나로 끌어올려 `value`/`checked` + `onChange`로 전환. 제어형 입력은 React가 리렌더 시 항상 현재 state 값으로 되돌리기 때문에, 폼 액션이 완료되며 걸리는 네이티브 reset의 영향을 받지 않음. `name` 속성은 그대로 유지해 `FormData` 파싱(`parseServiceFormData`) 쪽은 변경 없음.
 - **검증**: lint·타입체크·프로덕션 빌드 통과, `defaultValue`/`defaultChecked` 잔여 사용 없음을 grep으로 확인. 이 환경엔 브라우저 자동화 도구가 없어 실제 클릭 재현까지는 못 했고, React 19 공식 동작(액션 성공 시 통제되지 않은 폼 필드 자동 리셋)에 근거한 코드 리뷰 수준의 검증에 그침 — 배포 후 실사용으로 최종 확인 필요.
+
+## 39. 버그: 서비스 사진을 새로 등록/변경해도 이전 사진이 보임
+
+사용자가 실사용 중 발견: 서비스 등록·수정 화면에서 대표 이미지를 새로 선택해도 이전에 올렸던 사진이 그대로 뜸. `node_modules/next/dist/docs`에서 Next.js 16 이미지 캐시 기본값을 확인해 원인을 특정함 — Next 16부터 `images.minimumCacheTTL` 기본값이 60초에서 **4시간**으로 올라갔고(버전 16 breaking change), 공식 문서에 "캐시를 무효화할 방법이 현재 없고, `src`를 직접 바꾸는 수밖에 없다"고 명시돼 있음. 그런데 대표 이미지의 저장 경로가 `${photographerId}/${serviceId}/cover.${ext}`로 항상 고정이라(같은 서비스면 몇 번을 다시 올려도 같은 경로 → 같은 URL), Next Image Optimizer가 원본이 바뀐 걸 모르고 최대 4시간 동안 이전 이미지를 그대로 캐시해 보여줌. `upsert:true`로 스토리지에는 새 파일이 정상적으로 올라가 있었으므로, 실제 업로드가 안 된 게 아니라 화면에 옛날 캐시가 보이는 문제였음.
+
+- `getPublicStorageUrl(bucket, path, version?)`(`lib/supabase/storage.ts`)에 캐시 무효화용 `version` 파라미터 추가 — 넘기면 URL에 `?v=`를 붙여 내용이 바뀔 때마다 실제로 다른 URL이 되게 함.
+- **서비스 커버 이미지를 조회하는 모든 지점**(`services.ts`의 `getFeaturedServices`/`getExploreServices`/`getMyServices`/`getServiceForEdit`, `tags.ts`의 `getMoodDiscoveryTiles`, `photographers.ts`의 촬영자 상세, `booking.ts`의 예약용 서비스 목록)에서 `shooting_services.updated_at`을 함께 select해 `version`으로 넘기도록 통일 — 서비스 정보가 바뀔 때만(사진을 새로 안 바꾸면) URL이 그대로 유지되므로 불필요한 캐시 무효화는 없음.
+- `ImageUploader`(`components/upload/image-uploader.tsx`)는 업로드 직후 미리보기도 같은 문제를 겪을 수 있어(같은 세션 안에서 사진을 지웠다 다시 올리는 경우), `onAdd`로 넘기는 URL에 업로드 시각(`Date.now()`)을 붙임 — DB에는 영향 없는 `path`만 저장되고 `url`은 화면 표시용이라 안전.
+- **부수 확인**: 유저 프로필 사진(`avatars` 버킷)도 같은 `ImageUploader`를 쓰는데, 이건 `avatar_url`에 URL 전체(캐시 무효화 쿼리스트링 포함)를 그대로 저장하는 방식이라(§31), `mypage/edit/page.tsx`가 저장된 URL에서 경로를 다시 뽑아낼 때 쿼리스트링까지 같이 뽑혀버리는 부작용이 있었음 — `.split("?")[0]`으로 방어 처리. (포트폴리오 사진은 `path`만 저장하는 방식이라 영향 없음.)
+- **검증**: lint·타입체크·프로덕션 빌드 통과. 개발 서버로 홈 화면 HTML을 직접 확인해 서비스 커버 이미지 URL에 `?v=<updated_at>`이 실제로 붙는 것 확인.

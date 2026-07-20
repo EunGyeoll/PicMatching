@@ -19,7 +19,11 @@ export default async function MyPageEditPage() {
   const avatarUrlPrefix = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/`;
   const defaultAvatar =
     profile?.avatar_url && profile.avatar_url.startsWith(avatarUrlPrefix)
-      ? { path: profile.avatar_url.slice(avatarUrlPrefix.length), url: profile.avatar_url }
+      ? {
+          // avatar_url엔 캐시 무효화용 `?v=...`가 붙어있을 수 있어 경로 추출 시 제거한다.
+          path: profile.avatar_url.slice(avatarUrlPrefix.length).split("?")[0],
+          url: profile.avatar_url,
+        }
       : null;
 
   return (

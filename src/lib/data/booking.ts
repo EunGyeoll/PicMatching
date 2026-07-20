@@ -26,7 +26,7 @@ export async function getBookablePhotographer(
     .from("shooting_services")
     .select(
       `id, title, description, price, duration_minutes, buffer_before_minutes,
-       buffer_after_minutes, cover_image_path, inclusions, retouched_photo_count,
+       buffer_after_minutes, cover_image_path, updated_at, inclusions, retouched_photo_count,
        provides_raw_files, delivery_days, max_participants, extra_fee_conditions,
        travel_fee, night_surcharge, weekend_surcharge,
        photographer_service_tags(service_tags(label))`,
@@ -49,7 +49,7 @@ export async function getBookablePhotographer(
       bufferBeforeMinutes: s.buffer_before_minutes,
       bufferAfterMinutes: s.buffer_after_minutes,
       coverImageUrl: s.cover_image_path
-        ? getPublicStorageUrl("services", s.cover_image_path)
+        ? getPublicStorageUrl("services", s.cover_image_path, s.updated_at)
         : null,
       inclusions: s.inclusions,
       retouchedPhotoCount: s.retouched_photo_count,
