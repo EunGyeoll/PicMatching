@@ -2,8 +2,8 @@
 
 import { useActionState, useState } from "react";
 import { ImageUploader, type UploadedImage } from "@/components/upload/image-uploader";
-import { TagInput } from "@/components/form/tag-input";
 import { DURATION_OPTIONS } from "@/lib/validations/service";
+import { AREA_OPTIONS } from "@/lib/constants/areas";
 import type { ServiceEditData } from "@/types/domain";
 import {
   createServiceAction,
@@ -68,8 +68,8 @@ export function ServiceForm({
     setFields((f) => ({ ...f, [key]: value }));
   }
 
-  function toggleId(list: number[], id: number, setList: (v: number[]) => void) {
-    setList(list.includes(id) ? list.filter((v) => v !== id) : [...list, id]);
+  function toggleValue<T>(list: T[], value: T, setList: (v: T[]) => void) {
+    setList(list.includes(value) ? list.filter((v) => v !== value) : [...list, value]);
   }
 
   return (
@@ -204,7 +204,22 @@ export function ServiceForm({
           </Field>
 
           <Field label="활동 가능 지역" required>
-            <TagInput values={areas} onChange={setAreas} placeholder="예: 성수" />
+            <div className="flex flex-wrap gap-1.5">
+              {AREA_OPTIONS.map((area) => (
+                <button
+                  key={area}
+                  type="button"
+                  onClick={() => toggleValue(areas, area, setAreas)}
+                  className={`rounded-full border px-3 py-1.5 text-xs ${
+                    areas.includes(area)
+                      ? "border-stone-900 bg-stone-900 text-white"
+                      : "border-stone-200 text-stone-600"
+                  }`}
+                >
+                  {area}
+                </button>
+              ))}
+            </div>
           </Field>
 
           <Field label="촬영 목적">
@@ -213,7 +228,7 @@ export function ServiceForm({
                 <button
                   key={tag.id}
                   type="button"
-                  onClick={() => toggleId(purposeIds, tag.id, setPurposeIds)}
+                  onClick={() => toggleValue(purposeIds, tag.id, setPurposeIds)}
                   className={`rounded-full border px-3 py-1.5 text-xs ${
                     purposeIds.includes(tag.id)
                       ? "border-stone-900 bg-stone-900 text-white"
@@ -232,7 +247,7 @@ export function ServiceForm({
                 <button
                   key={tag.id}
                   type="button"
-                  onClick={() => toggleId(moodIds, tag.id, setMoodIds)}
+                  onClick={() => toggleValue(moodIds, tag.id, setMoodIds)}
                   className={`rounded-full border px-3 py-1.5 text-xs ${
                     moodIds.includes(tag.id)
                       ? "border-stone-900 bg-stone-900 text-white"

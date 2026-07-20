@@ -60,6 +60,7 @@ export async function getRecentlyActivePhotographers(
 export type PhotographerFilters = {
   purpose?: string;
   mood?: string;
+  area?: string;
 };
 
 export async function getExplorePhotographers(
@@ -94,6 +95,10 @@ export async function getExplorePhotographers(
     if (publishedServices.length === 0) continue;
 
     if (idFilter && !publishedServices.some((s) => idFilter.includes(s.id))) {
+      continue;
+    }
+
+    if (filters.area && !row.photographer_areas.some((a) => a.area === filters.area)) {
       continue;
     }
 

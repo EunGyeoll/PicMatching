@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { ImageUploader, type UploadedImage } from "@/components/upload/image-uploader";
-import { TagInput } from "@/components/form/tag-input";
+import { AREA_OPTIONS } from "@/lib/constants/areas";
 import {
   onboardingStep1Schema,
   onboardingStep2Schema,
@@ -178,7 +178,26 @@ export function OnboardingWizard({
             />
           </Field>
           <Field label="주요 활동 지역" required>
-            <TagInput values={areas} onChange={setAreas} placeholder="예: 성수" />
+            <div className="flex flex-wrap gap-1.5">
+              {AREA_OPTIONS.map((area) => (
+                <button
+                  key={area}
+                  type="button"
+                  onClick={() =>
+                    setAreas((prev) =>
+                      prev.includes(area) ? prev.filter((v) => v !== area) : [...prev, area],
+                    )
+                  }
+                  className={`rounded-full border px-3 py-1.5 text-xs ${
+                    areas.includes(area)
+                      ? "border-stone-900 bg-stone-900 text-white"
+                      : "border-stone-200 text-stone-600"
+                  }`}
+                >
+                  {area}
+                </button>
+              ))}
+            </div>
           </Field>
         </div>
       ) : null}

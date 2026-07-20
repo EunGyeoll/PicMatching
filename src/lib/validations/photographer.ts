@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { AREA_OPTIONS } from "@/lib/constants/areas";
 
 export const onboardingStep1Schema = z.object({
   displayName: z
@@ -20,9 +21,9 @@ export const onboardingStep2Schema = z.object({
     .min(1, "상세 소개를 입력해주세요.")
     .max(2000, "상세 소개는 2000자 이하여야 합니다."),
   areas: z
-    .array(z.string().trim().min(1))
-    .min(1, "활동 지역을 1개 이상 입력해주세요.")
-    .max(10, "활동 지역은 10개까지 등록할 수 있습니다."),
+    .array(z.enum(AREA_OPTIONS))
+    .min(1, "활동 지역을 1개 이상 선택해주세요.")
+    .max(10, "활동 지역은 10개까지 선택할 수 있습니다."),
 });
 
 export const onboardingStep3Schema = z.object({

@@ -46,6 +46,7 @@ export async function getFeaturedServices(limit = 10): Promise<ServiceCard[]> {
 export type ServiceFilters = {
   purpose?: string;
   mood?: string;
+  area?: string;
 };
 
 export async function getExploreServices(
@@ -69,6 +70,9 @@ export async function getExploreServices(
 
   if (idFilter) {
     query = query.in("id", idFilter);
+  }
+  if (filters.area) {
+    query = query.contains("areas", [filters.area]);
   }
 
   const { data } = await query;

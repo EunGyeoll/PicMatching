@@ -2,15 +2,20 @@ import Link from "next/link";
 import { getExploreServices } from "@/lib/data/services";
 import { getExplorePhotographers } from "@/lib/data/photographers";
 import { getServiceTagsByCategory } from "@/lib/data/tags";
+import { AREA_OPTIONS } from "@/lib/constants/areas";
 import { ServiceCard } from "@/components/photo/service-card";
 import { PhotographerListItem } from "@/components/photo/photographer-list-item";
-import { FilterChip } from "@/components/common/filter-chip";
+import {
+  ExploreFilterTabs,
+  type ExploreFilterCategory,
+} from "@/components/photo/explore-filter-tabs";
 import { EmptyState } from "@/components/common/empty-state";
 
 type ExploreSearchParams = {
   view?: string;
   purpose?: string;
   mood?: string;
+  area?: string;
 };
 
 function buildHref(params: ExploreSearchParams, overrides: ExploreSearchParams) {
@@ -19,6 +24,7 @@ function buildHref(params: ExploreSearchParams, overrides: ExploreSearchParams) 
   if (merged.view && merged.view !== "photos") query.set("view", merged.view);
   if (merged.purpose) query.set("purpose", merged.purpose);
   if (merged.mood) query.set("mood", merged.mood);
+  if (merged.area) query.set("area", merged.area);
   const qs = query.toString();
   return qs ? `/explore?${qs}` : "/explore";
 }
@@ -30,7 +36,7 @@ export default async function ExplorePage({
 }) {
   const params = await searchParams;
   const view = params.view === "photographers" ? "photographers" : "photos";
-  const filters = { purpose: params.purpose, mood: params.mood };
+  const filters = { purpose: params.purpose, mood: params.mood, area: params.area };
 
   const [services, photographers, tags] = await Promise.all([
     view === "photos" ? getExploreServices(filters) : Promise.resolve([]),
@@ -39,7 +45,61 @@ export default async function ExplorePage({
   ]);
 
   const hasResults = view === "photos" ? services.length > 0 : photographers.length > 0;
-  const hasActiveFilter = Boolean(params.purpose || params.mood);
+  const hasActiveFilter = Boolean(params.purpose || params.mood || params.area);
+
+  const filterCategories: ExploreFilterCategory[] = [
+    {
+      key: "purpose",
+      label: "목적",
+      hasActiveSelection: Boolean(params.purpose),
+      options: [
+        {
+          label: "목적 전체",
+          href: buildHref(params, { purpose: undefined }),
+          active: !params.purpose,
+        },
+        ...tags.purpose.map((label) => ({
+          label,
+          href: buildHref(params, { purpose: params.purpose === label ? undefined : label }),
+          active: params.purpose === label,
+        })),
+      ],
+    },
+    {
+      key: "mood",
+      label: "무드",
+      hasActiveSelection: Boolean(params.mood),
+      options: [
+        {
+          label: "무드 전체",
+          href: buildHref(params, { mood: undefined }),
+          active: !params.mood,
+        },
+        ...tags.mood.map((label) => ({
+          label,
+          href: buildHref(params, { mood: params.mood === label ? undefined : label }),
+          active: params.mood === label,
+        })),
+      ],
+    },
+    {
+      key: "area",
+      label: "지역",
+      hasActiveSelection: Boolean(params.area),
+      options: [
+        {
+          label: "지역 전체",
+          href: buildHref(params, { area: undefined }),
+          active: !params.area,
+        },
+        ...AREA_OPTIONS.map((area) => ({
+          label: area,
+          href: buildHref(params, { area: params.area === area ? undefined : area }),
+          active: params.area === area,
+        })),
+      ],
+    },
+  ];
 
   return (
     <main className="mx-auto max-w-120">
@@ -63,35 +123,7 @@ export default async function ExplorePage({
           </Link>
         </div>
 
-        <div className="flex gap-1.5 overflow-x-auto pb-1">
-          <FilterChip href={buildHref(params, { purpose: undefined })} active={!params.purpose}>
-            목적 전체
-          </FilterChip>
-          {tags.purpose.map((label) => (
-            <FilterChip
-              key={label}
-              href={buildHref(params, { purpose: params.purpose === label ? undefined : label })}
-              active={params.purpose === label}
-            >
-              {label}
-            </FilterChip>
-          ))}
-        </div>
-
-        <div className="flex gap-1.5 overflow-x-auto pb-1">
-          <FilterChip href={buildHref(params, { mood: undefined })} active={!params.mood}>
-            무드 전체
-          </FilterChip>
-          {tags.mood.map((label) => (
-            <FilterChip
-              key={label}
-              href={buildHref(params, { mood: params.mood === label ? undefined : label })}
-              active={params.mood === label}
-            >
-              {label}
-            </FilterChip>
-          ))}
-        </div>
+        <ExploreFilterTabs categories={filterCategories} />
       </div>
 
       {!hasResults ? (
@@ -102,7 +134,7 @@ export default async function ExplorePage({
           action={
             hasActiveFilter ? (
               <Link
-                href={buildHref(params, { purpose: undefined, mood: undefined })}
+                href={buildHref(params, { purpose: undefined, mood: undefined, area: undefined })}
                 className="mt-1 rounded-full border border-stone-300 px-3 py-1.5 text-xs text-stone-600"
               >
                 필터 초기화

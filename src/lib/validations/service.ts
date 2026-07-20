@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { AREA_OPTIONS } from "@/lib/constants/areas";
 
 export const DURATION_OPTIONS = [30, 45, 60, 75, 90, 120] as const;
 
@@ -27,7 +28,7 @@ export const serviceFormSchema = z.object({
     .max(4000, "상세 설명은 4000자 이하여야 합니다."),
   inclusions: z.string().trim().max(2000, "포함 사항은 2000자 이하여야 합니다.").optional(),
   areas: z
-    .array(z.string().trim().min(1))
+    .array(z.enum(AREA_OPTIONS))
     .min(1, "활동 가능 지역을 1개 이상 선택해주세요.")
     .max(10, "활동 가능 지역은 10개까지 선택할 수 있습니다."),
   purposeTagIds: z.array(z.number().int()).max(9),
