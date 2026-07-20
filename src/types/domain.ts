@@ -25,6 +25,11 @@ export type RecentlyActivePhotographer = {
   hasRecentUpdate: boolean;
 };
 
+export type MoodDiscoveryTile = {
+  label: string;
+  photoUrl: string;
+};
+
 export type MyServiceListItem = {
   id: string;
   title: string;

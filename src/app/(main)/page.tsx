@@ -2,16 +2,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { Search } from "lucide-react";
 import { getFeaturedServices } from "@/lib/data/services";
-import { getServiceTagsByCategory } from "@/lib/data/tags";
+import { getServiceTagsByCategory, getMoodDiscoveryTiles } from "@/lib/data/tags";
 import { getRecentlyActivePhotographers } from "@/lib/data/photographers";
 import { ServiceCard } from "@/components/photo/service-card";
 import { PhotographerStoryTray } from "@/components/photo/photographer-story-tray";
 
 export default async function Home() {
-  const [featuredServices, tags, recentPhotographers] = await Promise.all([
+  const [featuredServices, tags, recentPhotographers, moodTiles] = await Promise.all([
     getFeaturedServices(10),
     getServiceTagsByCategory(),
     getRecentlyActivePhotographers(12),
+    getMoodDiscoveryTiles(6),
   ]);
 
   return (
@@ -69,20 +70,29 @@ export default async function Home() {
         )}
       </section>
 
-      <section className="flex flex-col gap-2.5 px-4 py-5">
-        <h2 className="text-sm font-bold text-stone-900">무드로 찾기</h2>
-        <div className="grid grid-cols-3 gap-2">
-          {tags.mood.slice(0, 6).map((label) => (
-            <Link
-              key={label}
-              href={`/explore?mood=${encodeURIComponent(label)}`}
-              className="flex aspect-square items-end rounded-xl bg-stone-100 p-2.5 text-[11px] font-semibold text-stone-700"
-            >
-              {label}
-            </Link>
-          ))}
-        </div>
-      </section>
+      {moodTiles.length > 0 && (
+        <section className="flex flex-col gap-2.5 px-4 py-5">
+          <h2 className="text-sm font-bold text-stone-900">무드로 찾기</h2>
+          <div className="grid grid-cols-3 gap-2">
+            {moodTiles.map((tile) => (
+              <Link key={tile.label} href={`/explore?mood=${encodeURIComponent(tile.label)}`}>
+                <div className="relative aspect-4/5 overflow-hidden rounded-xl bg-stone-100">
+                  <Image
+                    src={tile.photoUrl}
+                    alt=""
+                    fill
+                    sizes="(max-width: 480px) 33vw, 160px"
+                    className="object-cover"
+                  />
+                </div>
+                <p className="mt-1 truncate text-[11.5px] font-semibold text-stone-700">
+                  {tile.label}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   );
 }
