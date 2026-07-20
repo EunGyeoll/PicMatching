@@ -17,10 +17,10 @@ export async function getBookablePhotographer(
   if (!profile) return null;
 
   const { data: account } = await supabase
-    .from("profiles")
+    .from("profiles_public")
     .select("avatar_url")
     .eq("id", photographerId)
-    .single();
+    .maybeSingle();
 
   const { data: services } = await supabase
     .from("shooting_services")

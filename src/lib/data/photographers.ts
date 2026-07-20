@@ -38,7 +38,7 @@ export async function getRecentlyActivePhotographers(
       .select("id, display_name")
       .in("id", candidateIds)
       .eq("status", "active"),
-    supabase.from("profiles").select("id, avatar_url").in("id", candidateIds),
+    supabase.from("profiles_public").select("id, avatar_url").in("id", candidateIds),
   ]);
 
   const nameById = new Map((photographers ?? []).map((p) => [p.id, p.display_name]));
@@ -143,7 +143,7 @@ export async function getPhotographerDetail(
 
   const [{ data: account }, { data: portfolio }, { data: services }, { count: reviewCount }] =
     await Promise.all([
-      supabase.from("profiles").select("avatar_url").eq("id", id).single(),
+      supabase.from("profiles_public").select("avatar_url").eq("id", id).maybeSingle(),
       supabase
         .from("portfolio_images")
         .select("id, storage_path")

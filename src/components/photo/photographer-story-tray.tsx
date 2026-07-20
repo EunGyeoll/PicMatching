@@ -11,9 +11,6 @@ export function PhotographerStoryTray({
 
   return (
     <section className="border-b border-stone-100 pb-3">
-      <h2 className="px-4 pb-2 text-[11px] font-bold text-stone-500">
-        지금 활동 중인 촬영자
-      </h2>
       <div className="flex gap-3.5 overflow-x-auto px-4">
         {photographers.map((photographer) => (
           <Link

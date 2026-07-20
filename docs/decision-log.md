@@ -378,3 +378,13 @@
 - 홈 화면(`(main)/page.tsx`)에서 `PhotographerStoryTray`와 "지금 만나볼 수 있는 촬영" 사이에 있던 목적 칩 행(`전체` + `tags.purpose` 매핑)을 제거.
 - 이 칩 행에만 쓰이던 `getServiceTagsByCategory()` 호출도 같이 제거(다른 곳에서 안 쓰임).
 - **검증**: lint·타입체크·프로덕션 빌드 통과.
+
+## 41. 버그이자 보안 취약점: 다른 사용자로 보면 촬영자 프로필 사진이 안 보임 + 그 과정에서 발견한 쓰기 취약점
+
+사용자 문의: "다른 사용자로 로그인했을때 프사가 안보여." 원인은 `profiles` 테이블 RLS가 본인만 조회 가능(`auth.uid() = id`)이라 다른 사람의 `avatar_url`이 항상 null로 왔던 것. 고치다가 같은 목적의 `profiles_public` 뷰가 이미 있는 걸 발견했는데, 이 뷰가 RLS를 우회하는 "security definer view"이면서 `anon`/`authenticated`에게 쓰기 권한까지 열려있어 **다른 사용자의 닉네임을 임의로 바꿀 수 있는 취약점**도 같이 발견 — 테스트 계정으로 실제 변경 가능함을 확인 후 즉시 복구.
+
+- `photographers.ts`/`booking.ts`의 avatar_url 조회 3곳을 `profiles` → `profiles_public`으로 변경.
+- `profiles_public`의 INSERT/UPDATE/DELETE 권한을 `anon`/`authenticated`에서 회수(마이그레이션 3건, `supabase/migrations/20260720100000~100200`), 차단 확인.
+- `database.types.ts` 재생성, `photographer-story-tray.tsx`의 깨진 JSX 주석도 같이 정리.
+- **검증**: 실제 계정으로 조회/쓰기차단 모두 확인. lint·타입체크·빌드 통과.
+- **참고**: `profiles_public`은 권한을 잠근 뒤에도 Supabase 어드바이저에 "Security Definer View"로 계속 표시될 수 있음(뷰 자체의 속성이라 사라지지 않음) — 실제 위험(쓰기 우회)은 해소됐으니 다시 봐도 놀라지 않아도 됨.
