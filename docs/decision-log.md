@@ -355,3 +355,10 @@
 - `getMoodDiscoveryTiles()`(`src/lib/data/tags.ts`) 신설: 무드 태그 중 공개된 서비스가 실제로 연결된 것만, 그 서비스들 중 가장 최근에 등록된 것의 커버 사진과 함께 반환. 연결된 서비스가 없는 태그는 아예 응답에서 빠짐.
 - 홈 화면(`(main)/page.tsx`)의 "무드로 찾기"는 이제 타일마다 실제 커버 사진(4:5 비율, `object-cover`)을 보여주고 라벨은 사진 아래 캡션으로 표시(사진 위 오버레이는 §둘러보기 논의 때 정한 원칙대로 계속 안 씀). `moodTiles`가 빈 배열이면 섹션 자체를 렌더링하지 않음(현재는 콘텐츠가 있는 태그만 있어 항상 뜨지만, 데이터가 다 사라지는 극단적 상황 대비).
 - **검증**: 실제 anon 클라이언트로 쿼리를 직접 실행해 무드별 대표 사진이 최신순으로 올바르게 선택되는지 확인(자연스러운=연남동 감성 촬영의 최신 커버로 교체됨). lint·타입체크·프로덕션 빌드 통과, 개발 서버로 홈 화면 HTML에 실제 Supabase Storage 이미지 URL이 4개(자연스러운/필름/청량한/도시적인) 렌더링되는 것 확인.
+
+## 38. 버그: 서비스 등록 폼에서 필수 항목 누락 시 입력값 전체 초기화
+
+사용자가 실사용 중 발견: 필수 항목을 하나라도 안 채우고 저장을 누르면 다른 필드에 입력해둔 값까지 다 지워짐. 원인은 React 19의 `<form action={fn}>` 동작 방식 — 폼 액션이 예외를 던지지 않고 완료되면(설령 `{error: "..."}`를 반환하는 검증 실패라도) React가 통제되지 않은(uncontrolled, `defaultValue`/`defaultChecked` 기반) 입력을 자동으로 리셋함. `title`/`price`/`description`은 HTML `required`가 걸려 있어 비어있으면 브라우저가 애초에 제출을 막지만, `대표 이미지`(`coverImagePath`, hidden input)와 `활동 가능 지역`(`areas`, TagInput)은 네이티브 `required`가 없어서 실제로 서버까지 요청이 가고, 이 둘 중 하나라도 비어 zod 검증에 걸리면 나머지 필드가 전부 리셋되는 방식으로 재현됨.
+
+- **수정**: `ServiceForm`(`services/service-form.tsx`)에서 `areas`/`purposeIds`/`moodIds`/`duration`/`coverImage`/`isPublished`처럼 이미 제어형(state 기반)으로 관리되던 것 외에, 나머지 16개 텍스트·숫자·체크박스 필드(제목/가격/설명/포함사항/보정본 수/원본 제공 여부 등)를 전부 `fields` state 객체 하나로 끌어올려 `value`/`checked` + `onChange`로 전환. 제어형 입력은 React가 리렌더 시 항상 현재 state 값으로 되돌리기 때문에, 폼 액션이 완료되며 걸리는 네이티브 reset의 영향을 받지 않음. `name` 속성은 그대로 유지해 `FormData` 파싱(`parseServiceFormData`) 쪽은 변경 없음.
+- **검증**: lint·타입체크·프로덕션 빌드 통과, `defaultValue`/`defaultChecked` 잔여 사용 없음을 grep으로 확인. 이 환경엔 브라우저 자동화 도구가 없어 실제 클릭 재현까지는 못 했고, React 19 공식 동작(액션 성공 시 통제되지 않은 폼 필드 자동 리셋)에 근거한 코드 리뷰 수준의 검증에 그침 — 배포 후 실사용으로 최종 확인 필요.

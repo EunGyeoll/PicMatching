@@ -45,6 +45,29 @@ export function ServiceForm({
   const [moodIds, setMoodIds] = useState<number[]>(initial?.moodTagIds ?? []);
   const [isPublished, setIsPublished] = useState(initial?.isPublished ?? true);
 
+  const [fields, setFields] = useState({
+    title: initial?.title ?? "",
+    price: initial?.price?.toString() ?? "",
+    description: initial?.description ?? "",
+    inclusions: initial?.inclusions ?? "",
+    retouchedPhotoCount: initial?.retouchedPhotoCount?.toString() ?? "",
+    providesRawFiles: initial?.providesRawFiles ?? false,
+    providesAllRawFiles: initial?.providesAllRawFiles ?? false,
+    deliveryDays: initial?.deliveryDays?.toString() ?? "",
+    maxParticipants: initial?.maxParticipants?.toString() ?? "",
+    allowsOutfitChange: initial?.allowsOutfitChange ?? false,
+    recommendedFor: initial?.recommendedFor ?? "",
+    extraFeeConditions: initial?.extraFeeConditions ?? "",
+    travelFee: initial?.travelFee?.toString() ?? "",
+    nightSurcharge: initial?.nightSurcharge?.toString() ?? "",
+    weekendSurcharge: initial?.weekendSurcharge?.toString() ?? "",
+    notes: initial?.notes ?? "",
+  });
+
+  function setField<K extends keyof typeof fields>(key: K, value: (typeof fields)[K]) {
+    setFields((f) => ({ ...f, [key]: value }));
+  }
+
   function toggleId(list: number[], id: number, setList: (v: number[]) => void) {
     setList(list.includes(id) ? list.filter((v) => v !== id) : [...list, id]);
   }
@@ -77,7 +100,8 @@ export function ServiceForm({
               name="title"
               required
               maxLength={60}
-              defaultValue={initial?.title}
+              value={fields.title}
+              onChange={(e) => setField("title", e.target.value)}
               placeholder="예: 서울숲 자연광 감성 스냅"
               className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
             />
@@ -104,7 +128,8 @@ export function ServiceForm({
               type="number"
               min={0}
               required
-              defaultValue={initial?.price}
+              value={fields.price}
+              onChange={(e) => setField("price", e.target.value)}
               placeholder="90000"
               className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
             />
@@ -160,7 +185,8 @@ export function ServiceForm({
               name="description"
               required
               rows={4}
-              defaultValue={initial?.description}
+              value={fields.description}
+              onChange={(e) => setField("description", e.target.value)}
               placeholder="촬영 장소, 분위기, 진행 방식 등을 소개해주세요"
               className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
             />
@@ -170,7 +196,8 @@ export function ServiceForm({
             <textarea
               name="inclusions"
               rows={2}
-              defaultValue={initial?.inclusions ?? undefined}
+              value={fields.inclusions}
+              onChange={(e) => setField("inclusions", e.target.value)}
               placeholder="예: 보정본 20장, 촬영 장소 이동 1회 포함"
               className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
             />
@@ -229,7 +256,8 @@ export function ServiceForm({
                 name="retouchedPhotoCount"
                 type="number"
                 min={0}
-                defaultValue={initial?.retouchedPhotoCount ?? undefined}
+                value={fields.retouchedPhotoCount}
+                onChange={(e) => setField("retouchedPhotoCount", e.target.value)}
                 className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
@@ -237,7 +265,8 @@ export function ServiceForm({
               <input
                 type="checkbox"
                 name="providesRawFiles"
-                defaultChecked={initial?.providesRawFiles ?? false}
+                checked={fields.providesRawFiles}
+                onChange={(e) => setField("providesRawFiles", e.target.checked)}
                 className="size-4"
               />
               보정 전 원본 제공
@@ -246,7 +275,8 @@ export function ServiceForm({
               <input
                 type="checkbox"
                 name="providesAllRawFiles"
-                defaultChecked={initial?.providesAllRawFiles ?? false}
+                checked={fields.providesAllRawFiles}
+                onChange={(e) => setField("providesAllRawFiles", e.target.checked)}
                 className="size-4"
               />
               전체 원본 제공
@@ -256,7 +286,8 @@ export function ServiceForm({
                 name="deliveryDays"
                 type="number"
                 min={0}
-                defaultValue={initial?.deliveryDays ?? undefined}
+                value={fields.deliveryDays}
+                onChange={(e) => setField("deliveryDays", e.target.value)}
                 className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
@@ -265,7 +296,8 @@ export function ServiceForm({
                 name="maxParticipants"
                 type="number"
                 min={1}
-                defaultValue={initial?.maxParticipants ?? undefined}
+                value={fields.maxParticipants}
+                onChange={(e) => setField("maxParticipants", e.target.value)}
                 className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
@@ -273,7 +305,8 @@ export function ServiceForm({
               <input
                 type="checkbox"
                 name="allowsOutfitChange"
-                defaultChecked={initial?.allowsOutfitChange ?? false}
+                checked={fields.allowsOutfitChange}
+                onChange={(e) => setField("allowsOutfitChange", e.target.checked)}
                 className="size-4"
               />
               의상 변경 가능
@@ -281,7 +314,8 @@ export function ServiceForm({
             <Field label="추천 대상">
               <input
                 name="recommendedFor"
-                defaultValue={initial?.recommendedFor ?? undefined}
+                value={fields.recommendedFor}
+                onChange={(e) => setField("recommendedFor", e.target.value)}
                 className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
@@ -289,7 +323,8 @@ export function ServiceForm({
               <textarea
                 name="extraFeeConditions"
                 rows={2}
-                defaultValue={initial?.extraFeeConditions ?? undefined}
+                value={fields.extraFeeConditions}
+                onChange={(e) => setField("extraFeeConditions", e.target.value)}
                 className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
@@ -298,7 +333,8 @@ export function ServiceForm({
                 name="travelFee"
                 type="number"
                 min={0}
-                defaultValue={initial?.travelFee ?? undefined}
+                value={fields.travelFee}
+                onChange={(e) => setField("travelFee", e.target.value)}
                 className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
@@ -307,7 +343,8 @@ export function ServiceForm({
                 name="nightSurcharge"
                 type="number"
                 min={0}
-                defaultValue={initial?.nightSurcharge ?? undefined}
+                value={fields.nightSurcharge}
+                onChange={(e) => setField("nightSurcharge", e.target.value)}
                 className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
@@ -316,7 +353,8 @@ export function ServiceForm({
                 name="weekendSurcharge"
                 type="number"
                 min={0}
-                defaultValue={initial?.weekendSurcharge ?? undefined}
+                value={fields.weekendSurcharge}
+                onChange={(e) => setField("weekendSurcharge", e.target.value)}
                 className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
@@ -324,7 +362,8 @@ export function ServiceForm({
               <textarea
                 name="notes"
                 rows={2}
-                defaultValue={initial?.notes ?? undefined}
+                value={fields.notes}
+                onChange={(e) => setField("notes", e.target.value)}
                 className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
