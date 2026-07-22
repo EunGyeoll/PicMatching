@@ -17,7 +17,7 @@ export default async function Home() {
   return (
     <main className="mx-auto max-w-120 pb-6">
       <div className="flex items-center justify-between px-4 py-3">
-        <Image src="/logo.svg" alt="moodi" width={100} height={25} priority />
+        <Image src="/logo.svg" alt="moodi" width={100} height={27} priority />
         <Link
           href="/explore"
           aria-label="탐색으로 이동"

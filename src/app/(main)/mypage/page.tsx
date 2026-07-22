@@ -1,30 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
-import { getAuthUser } from "@/lib/supabase/auth";
+import { requireAuthUser } from "@/lib/supabase/auth";
 import { createClient } from "@/lib/supabase/server";
 import { signOutAction } from "./actions";
 
 export default async function MyPage() {
-  const user = await getAuthUser();
-
-  if (!user) {
-    return (
-      <main className="mx-auto flex min-h-dvh max-w-120 flex-col items-center justify-center gap-4 px-6 text-center">
-        <h1 className="text-xl font-semibold text-stone-900">
-          로그인이 필요합니다
-        </h1>
-        <p className="text-sm text-stone-500">
-          마이페이지는 로그인 후 이용할 수 있습니다.
-        </p>
-        <Link
-          href="/login?next=/mypage"
-          className="mt-2 rounded-md bg-stone-900 px-5 py-2.5 text-sm font-medium text-white"
-        >
-          로그인하러 가기
-        </Link>
-      </main>
-    );
-  }
+  const user = await requireAuthUser("/mypage");
 
   const supabase = await createClient();
   const [{ data: profile }, { data: photographerProfile }] = await Promise.all([

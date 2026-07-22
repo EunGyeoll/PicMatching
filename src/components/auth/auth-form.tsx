@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { Eye, EyeOff, Mail } from "lucide-react";
+import { ChevronDown, Eye, EyeOff, Mail } from "lucide-react";
 
 export type AuthFormState = {
   error?: string;
@@ -25,6 +25,7 @@ export function AuthForm({
     {},
   );
   const [showPassword, setShowPassword] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   if (state.sent) {
     return (
@@ -41,69 +42,93 @@ export function AuthForm({
   }
 
   return (
-    <form action={formAction} className="flex flex-col gap-4">
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="email" className="text-sm font-medium text-stone-700">
-          이메일
-        </label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          autoComplete="email"
-          required
-          className="w-full rounded-md border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
+    <div className="flex flex-col gap-3">
+      <button
+        type="button"
+        onClick={() => setExpanded((value) => !value)}
+        aria-expanded={expanded}
+        className="flex w-full items-center justify-between rounded-xl bg-stone-100 px-4 py-3.5"
+      >
+        <span className="flex items-center gap-2 text-sm font-medium text-stone-700">
+          <Mail className="size-4 text-stone-500" />
+          {mode === "signup" ? "이메일로 회원가입" : "이메일로 로그인"}
+        </span>
+        <ChevronDown
+          className={`size-4 text-stone-400 transition-transform ${expanded ? "rotate-180" : ""}`}
         />
-      </div>
+      </button>
 
-      <div className="flex flex-col gap-1.5">
-        <label
-          htmlFor="password"
-          className="text-sm font-medium text-stone-700"
-        >
-          비밀번호
-        </label>
-        <div className="relative">
-          <input
-            id="password"
-            name="password"
-            type={showPassword ? "text" : "password"}
-            autoComplete={mode === "signup" ? "new-password" : "current-password"}
-            required
-            className="w-full rounded-md border border-stone-300 px-3 py-2.5 pr-11 text-sm outline-none focus:border-stone-500"
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword((value) => !value)}
-            aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 표시"}
-            className="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-stone-400"
-          >
-            {showPassword ? (
-              <EyeOff className="size-4" />
-            ) : (
-              <Eye className="size-4" />
-            )}
-          </button>
+      <div
+        className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
+          expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <form action={formAction} className="flex flex-col gap-3 pt-3">
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="email" className="sr-only">
+                이메일
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                placeholder="이메일"
+                required
+                className="w-full rounded-xl bg-stone-100 px-4 py-3.5 text-sm text-stone-900 outline-none placeholder:text-stone-400 focus:ring-2 focus:ring-stone-300"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="password" className="sr-only">
+                비밀번호
+              </label>
+              <div className="relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete={mode === "signup" ? "new-password" : "current-password"}
+                  placeholder="비밀번호"
+                  required
+                  className="w-full rounded-xl bg-stone-100 px-4 py-3.5 pr-11 text-sm text-stone-900 outline-none placeholder:text-stone-400 focus:ring-2 focus:ring-stone-300"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((value) => !value)}
+                  aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 표시"}
+                  className="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-stone-400"
+                >
+                  {showPassword ? (
+                    <EyeOff className="size-4" />
+                  ) : (
+                    <Eye className="size-4" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {state.error ? (
+              <p role="alert" className="text-sm text-red-600">
+                {state.error}
+              </p>
+            ) : null}
+
+            <button
+              type="submit"
+              disabled={pending}
+              className="mt-1 w-full rounded-full bg-stone-900 py-3.5 text-sm font-medium text-white transition-opacity disabled:opacity-50"
+            >
+              {pending
+                ? "처리 중..."
+                : mode === "signup"
+                  ? "이메일로 회원가입"
+                  : "이메일로 로그인"}
+            </button>
+          </form>
         </div>
       </div>
-
-      {state.error ? (
-        <p role="alert" className="text-sm text-red-600">
-          {state.error}
-        </p>
-      ) : null}
-
-      <button
-        type="submit"
-        disabled={pending}
-        className="mt-2 w-full rounded-md bg-stone-900 py-3 text-sm font-medium text-white transition-opacity disabled:opacity-50"
-      >
-        {pending
-          ? "처리 중..."
-          : mode === "signup"
-            ? "이메일로 회원가입"
-            : "이메일로 로그인"}
-      </button>
-    </form>
+    </div>
   );
 }
