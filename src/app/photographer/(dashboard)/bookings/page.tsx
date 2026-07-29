@@ -35,7 +35,7 @@ export default async function PhotographerBookingsPage({
           <Link
             key={tab.key}
             href={`/photographer/bookings?status=${tab.key}`}
-            className={`flex-1 border-b-2 py-2.5 text-center text-[12px] font-bold ${
+            className={`flex-1 border-b-2 py-2.5 text-center text-sm font-bold ${
               activeTab.key === tab.key
                 ? "border-stone-900 text-stone-900"
                 : "border-transparent text-stone-400"
@@ -53,14 +53,14 @@ export default async function PhotographerBookingsPage({
           {filtered.map((booking) => (
             <div key={booking.id} className="flex flex-col gap-1 border-b border-stone-100 px-4 py-3">
               <span
-                className={`self-start rounded-full px-2 py-0.5 text-[10px] font-bold ${STATUS_TONE[booking.status]}`}
+                className={`self-start rounded-full px-2 py-0.5 text-xs font-bold ${STATUS_TONE[booking.status]}`}
               >
                 {STATUS_LABEL[booking.status]}
               </span>
-              <span className="text-[12.5px] font-bold text-stone-900">
+              <span className="text-sm font-bold text-stone-900">
                 {booking.serviceTitle}
               </span>
-              <span className="text-[11px] text-stone-400">
+              <span className="text-xs text-stone-400">
                 {booking.customerNickname} · {formatBookingSchedule(booking.startsAt, booking.endsAt)} ·{" "}
                 {booking.participantCount}명
               </span>

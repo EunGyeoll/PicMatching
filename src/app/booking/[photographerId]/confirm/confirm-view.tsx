@@ -91,7 +91,7 @@ export function ConfirmView({ photographerId }: { photographerId: string }) {
     <main className="mx-auto flex min-h-dvh max-w-120 flex-col pb-28">
       <BookingStepHeader title="예약 확인" step={4} />
 
-      <div className="flex flex-col gap-1.5 border-b border-stone-100 p-4 text-[12.5px]">
+      <div className="flex flex-col gap-1.5 border-b border-stone-100 p-4 text-sm">
         <Row k="촬영자" v={store.photographerName ?? ""} />
         <Row k="서비스" v={store.serviceTitle ?? ""} />
         <Row k="일시" v={`${Number(month)}/${day}(${dow}) ${store.startTime}–${endTime}`} />
@@ -100,7 +100,7 @@ export function ConfirmView({ photographerId }: { photographerId: string }) {
 
       <div className="flex flex-col gap-3 border-b border-stone-100 p-4">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-bold text-stone-400">촬영 인원</span>
+          <span className="text-sm font-bold text-stone-400">촬영 인원</span>
           <div className="flex items-center gap-3">
             <button
               type="button"
@@ -110,7 +110,7 @@ export function ConfirmView({ photographerId }: { photographerId: string }) {
             >
               <Minus className="size-3.5" />
             </button>
-            <span className="w-4 text-center text-sm font-bold">
+            <span className="w-4 text-center text-base font-bold">
               {store.participantCount}
             </span>
             <button
@@ -125,21 +125,21 @@ export function ConfirmView({ photographerId }: { photographerId: string }) {
             </button>
           </div>
         </div>
-        <span className="text-[10.5px] text-stone-400">최대 {maxParticipants}인</span>
+        <span className="text-xs text-stone-400">최대 {maxParticipants}인</span>
 
         <label className="flex flex-col gap-1.5">
-          <span className="text-xs font-bold text-stone-400">요청 사항 (선택)</span>
+          <span className="text-sm font-bold text-stone-400">요청 사항 (선택)</span>
           <textarea
             value={store.requests}
             onChange={(e) => setRequests(e.target.value)}
             rows={3}
             placeholder="편안한 분위기로 촬영 부탁드려요"
-            className="rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
+            className="rounded-lg border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
           />
         </label>
       </div>
 
-      <div className="flex flex-col gap-1.5 border-b border-stone-100 p-4 text-xs">
+      <div className="flex flex-col gap-1.5 border-b border-stone-100 p-4 text-sm">
         <div className="flex justify-between text-stone-500">
           <span>서비스 금액</span>
           <span>{store.basePrice.toLocaleString()}원</span>
@@ -148,18 +148,18 @@ export function ConfirmView({ photographerId }: { photographerId: string }) {
           <span>추가 비용</span>
           <span>{additionalFee.toLocaleString()}원</span>
         </div>
-        <div className="flex justify-between border-t border-stone-200 pt-2 text-sm font-extrabold text-stone-900">
+        <div className="flex justify-between border-t border-stone-200 pt-2 text-base font-extrabold text-stone-900">
           <span>총 금액</span>
           <span>{totalPrice.toLocaleString()}원</span>
         </div>
       </div>
 
       <div className="flex flex-col gap-2 p-4">
-        <h2 className="text-xs font-bold text-stone-400">취소 정책</h2>
-        <p className="text-[11.5px] leading-relaxed text-stone-600">
+        <h2 className="text-sm font-bold text-stone-400">취소 정책</h2>
+        <p className="text-xs leading-relaxed text-stone-600">
           {store.cancellationPolicy ?? "촬영자가 등록한 취소 정책이 없습니다."}
         </p>
-        <label className="mt-2 flex items-start gap-2 text-[11px] text-stone-600">
+        <label className="mt-2 flex items-start gap-2 text-xs text-stone-600">
           <input
             type="checkbox"
             checked={agreed}
@@ -171,7 +171,7 @@ export function ConfirmView({ photographerId }: { photographerId: string }) {
       </div>
 
       {error ? (
-        <p className="px-4 pb-2 text-xs text-red-600" role="alert">
+        <p className="px-4 pb-2 text-sm text-red-600" role="alert">
           {error}
         </p>
       ) : null}
@@ -181,7 +181,7 @@ export function ConfirmView({ photographerId }: { photographerId: string }) {
           type="button"
           onClick={handleSubmit}
           disabled={!agreed || pending}
-          className="w-full rounded-lg bg-stone-900 py-3.5 text-sm font-bold text-white disabled:opacity-40"
+          className="w-full rounded-lg bg-stone-900 py-3.5 text-base font-bold text-white disabled:opacity-40"
         >
           {pending ? "요청 중..." : "예약 요청하기"}
         </button>

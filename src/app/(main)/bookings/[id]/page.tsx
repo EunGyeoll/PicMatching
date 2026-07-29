@@ -20,7 +20,7 @@ export default async function BookingDetailPage({
         <h1 className="text-lg font-semibold text-stone-900">
           예약을 찾을 수 없습니다
         </h1>
-        <Link href="/bookings" className="text-sm text-stone-900 underline">
+        <Link href="/bookings" className="text-base text-stone-900 underline">
           내 예약으로 돌아가기
         </Link>
       </main>
@@ -30,7 +30,7 @@ export default async function BookingDetailPage({
   return (
     <main className="mx-auto max-w-120 px-4 py-6">
       <span
-        className={`inline-block rounded-full px-2.5 py-1 text-[11px] font-bold ${STATUS_TONE[booking.status]}`}
+        className={`inline-block rounded-full px-2.5 py-1 text-xs font-bold ${STATUS_TONE[booking.status]}`}
       >
         {STATUS_LABEL[booking.status]}
       </span>
@@ -38,7 +38,7 @@ export default async function BookingDetailPage({
         {booking.serviceTitle}
       </h1>
 
-      <div className="mt-4 flex flex-col gap-2 rounded-xl border border-stone-200 p-4 text-[12.5px]">
+      <div className="mt-4 flex flex-col gap-2 rounded-xl border border-stone-200 p-4 text-sm">
         <Row k="촬영자" v={booking.photographerName} />
         <Row k="일시" v={formatBookingSchedule(booking.startsAt, booking.endsAt)} />
         <Row k="장소" v={booking.locationLabel ?? "추후 협의"} />
@@ -47,7 +47,7 @@ export default async function BookingDetailPage({
         {booking.requests ? <Row k="요청 사항" v={booking.requests} /> : null}
       </div>
 
-      <div className="mt-4 flex flex-col gap-1.5 rounded-xl border border-stone-200 p-4 text-[12.5px]">
+      <div className="mt-4 flex flex-col gap-1.5 rounded-xl border border-stone-200 p-4 text-sm">
         <div className="flex justify-between text-stone-500">
           <span>서비스 금액</span>
           <span>{booking.basePrice.toLocaleString()}원</span>
@@ -56,13 +56,13 @@ export default async function BookingDetailPage({
           <span>추가 비용</span>
           <span>{booking.additionalFee.toLocaleString()}원</span>
         </div>
-        <div className="flex justify-between border-t border-stone-200 pt-2 text-sm font-extrabold text-stone-900">
+        <div className="flex justify-between border-t border-stone-200 pt-2 text-base font-extrabold text-stone-900">
           <span>총 금액</span>
           <span>{booking.totalPrice.toLocaleString()}원</span>
         </div>
       </div>
 
-      <p className="mt-4 text-center font-mono text-[11px] text-stone-400">
+      <p className="mt-4 text-center font-mono text-xs text-stone-400">
         예약번호 {booking.id.slice(0, 8).toUpperCase()}
       </p>
     </main>

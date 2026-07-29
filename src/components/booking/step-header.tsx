@@ -23,7 +23,7 @@ export function BookingStepHeader({
         >
           <ChevronLeft className="size-5" />
         </button>
-        <span className="text-sm font-bold text-stone-900">{title}</span>
+        <span className="text-base font-bold text-stone-900">{title}</span>
       </div>
       <div className="mt-2.5 flex gap-1">
         {[1, 2, 3, 4].map((i) => (

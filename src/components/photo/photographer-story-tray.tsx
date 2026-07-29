@@ -33,13 +33,13 @@ export function PhotographerStoryTray({
                     className="object-cover"
                   />
                 ) : (
-                  <span className="flex size-full items-center justify-center text-sm font-semibold text-stone-400">
+                  <span className="flex size-full items-center justify-center text-base font-semibold text-stone-400">
                     {photographer.displayName.slice(0, 1)}
                   </span>
                 )}
               </div>
             </div>
-            <span className="max-w-14 truncate text-[9.5px] text-stone-600">
+            <span className="max-w-14 truncate text-xs text-stone-600">
               {photographer.displayName}
             </span>
           </Link>

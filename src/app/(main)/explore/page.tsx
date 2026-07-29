@@ -107,7 +107,7 @@ export default async function ExplorePage({
         <div className="flex gap-1 rounded-full bg-stone-100 p-1">
           <Link
             href={buildHref(params, { view: "photos" })}
-            className={`flex-1 rounded-full py-1.5 text-center text-xs font-semibold ${
+            className={`flex-1 rounded-full py-1.5 text-center text-sm font-semibold ${
               view === "photos" ? "bg-white text-stone-900 shadow-sm" : "text-stone-400"
             }`}
           >
@@ -115,7 +115,7 @@ export default async function ExplorePage({
           </Link>
           <Link
             href={buildHref(params, { view: "photographers" })}
-            className={`flex-1 rounded-full py-1.5 text-center text-xs font-semibold ${
+            className={`flex-1 rounded-full py-1.5 text-center text-sm font-semibold ${
               view === "photographers" ? "bg-white text-stone-900 shadow-sm" : "text-stone-400"
             }`}
           >
@@ -135,7 +135,7 @@ export default async function ExplorePage({
             hasActiveFilter ? (
               <Link
                 href={buildHref(params, { purpose: undefined, mood: undefined, area: undefined })}
-                className="mt-1 rounded-full border border-stone-300 px-3 py-1.5 text-xs text-stone-600"
+                className="mt-1 rounded-full border border-stone-300 px-3 py-1.5 text-sm text-stone-600"
               >
                 필터 초기화
               </Link>

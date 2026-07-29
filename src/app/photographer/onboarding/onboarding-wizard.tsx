@@ -119,7 +119,7 @@ export function OnboardingWizard({
           >
             <ChevronLeft className="size-5" />
           </button>
-          <span className="text-sm font-bold text-stone-900">
+          <span className="text-base font-bold text-stone-900">
             {isEdit ? "촬영자 정보 수정" : "촬영자 등록"}
           </span>
         </div>
@@ -152,7 +152,7 @@ export function OnboardingWizard({
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               placeholder="예: 서울숲 스냅 — 지호"
-              className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
+              className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
             />
           </Field>
           <Field label="한 줄 소개" required>
@@ -160,7 +160,7 @@ export function OnboardingWizard({
               value={headline}
               onChange={(e) => setHeadline(e.target.value)}
               placeholder="예: 자연광을 좋아하는 성수동 스냅 작가"
-              className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
+              className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
             />
           </Field>
         </div>
@@ -174,7 +174,7 @@ export function OnboardingWizard({
               onChange={(e) => setBio(e.target.value)}
               rows={5}
               placeholder="촬영 스타일, 경력, 좋아하는 무드 등을 자유롭게 소개해주세요"
-              className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
+              className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
             />
           </Field>
           <Field label="주요 활동 지역" required>
@@ -188,7 +188,7 @@ export function OnboardingWizard({
                       prev.includes(area) ? prev.filter((v) => v !== area) : [...prev, area],
                     )
                   }
-                  className={`rounded-full border px-3 py-1.5 text-xs ${
+                  className={`rounded-full border px-3 py-1.5 text-sm ${
                     areas.includes(area)
                       ? "border-stone-900 bg-stone-900 text-white"
                       : "border-stone-200 text-stone-600"
@@ -229,14 +229,14 @@ export function OnboardingWizard({
               onChange={(e) => setContactInfo(e.target.value)}
               rows={3}
               placeholder="예: 약속 장소 근처 도착하시면 문자로 안내드릴게요. 편한 신발 추천드려요."
-              className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
+              className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
             />
           </Field>
         </div>
       ) : null}
 
       {error ? (
-        <p className="px-4 pb-2 text-xs text-red-600" role="alert">
+        <p className="px-4 pb-2 text-sm text-red-600" role="alert">
           {error}
         </p>
       ) : null}
@@ -246,7 +246,7 @@ export function OnboardingWizard({
           <button
             type="button"
             onClick={goNext}
-            className="w-full rounded-lg bg-stone-900 py-3.5 text-sm font-bold text-white"
+            className="w-full rounded-lg bg-stone-900 py-3.5 text-base font-bold text-white"
           >
             다음
           </button>
@@ -256,7 +256,7 @@ export function OnboardingWizard({
               type="button"
               onClick={handleSubmit}
               disabled={pending}
-              className="w-full rounded-lg bg-stone-900 py-3.5 text-sm font-bold text-white disabled:opacity-40"
+              className="w-full rounded-lg bg-stone-900 py-3.5 text-base font-bold text-white disabled:opacity-40"
             >
               {isEdit
                 ? pending
@@ -266,7 +266,7 @@ export function OnboardingWizard({
                   ? "등록 중..."
                   : "등록 완료"}
             </button>
-            <p className="mt-2 text-center text-[10.5px] text-stone-400">
+            <p className="mt-2 text-center text-xs text-stone-400">
               {isEdit
                 ? "수정한 내용은 촬영자 상세 화면에 바로 반영돼요"
                 : "완료 후 마이페이지에서 촬영자 모드로 전환할 수 있어요"}
@@ -291,12 +291,12 @@ function Field({
 }) {
   return (
     <label className="flex flex-col gap-1.5">
-      <span className="text-xs font-bold text-stone-500">
+      <span className="text-sm font-bold text-stone-500">
         {label}
         {required ? <span className="text-stone-400"> · 필수</span> : null}
       </span>
       {children}
-      {hint ? <span className="text-[10.5px] text-stone-400">{hint}</span> : null}
+      {hint ? <span className="text-xs text-stone-400">{hint}</span> : null}
     </label>
   );
 }

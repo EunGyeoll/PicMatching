@@ -48,7 +48,7 @@ export function ServicePicker({
       <BookingStepHeader title={photographer.displayName} step={1} />
 
       <div className="flex flex-col gap-3 p-4">
-        <h2 className="text-xs font-bold text-stone-400">촬영 서비스 선택</h2>
+        <h2 className="text-sm font-bold text-stone-400">촬영 서비스 선택</h2>
         {photographer.services.map((service) => {
           const isSelected = service.id === selectedId;
           return (
@@ -72,14 +72,14 @@ export function ServicePicker({
                 ) : null}
               </div>
               <div className="flex flex-1 flex-col gap-1">
-                <div className="text-[12.5px] font-bold text-stone-900">
+                <div className="text-sm font-bold text-stone-900">
                   {service.title}
                 </div>
-                <div className="text-[10.5px] text-stone-400">
+                <div className="text-xs text-stone-400">
                   {service.price.toLocaleString()}원 · {service.durationMinutes}분
                 </div>
                 {isSelected ? (
-                  <dl className="mt-1.5 flex flex-col gap-1 text-[11px]">
+                  <dl className="mt-1.5 flex flex-col gap-1 text-xs">
                     <Row k="포함" v={service.inclusions ?? "안내 없음"} />
                     <Row
                       k="보정본"
@@ -129,7 +129,7 @@ export function ServicePicker({
         <button
           type="button"
           onClick={handleNext}
-          className="w-full rounded-lg bg-stone-900 py-3.5 text-sm font-bold text-white"
+          className="w-full rounded-lg bg-stone-900 py-3.5 text-base font-bold text-white"
         >
           다음: 날짜 선택
         </button>

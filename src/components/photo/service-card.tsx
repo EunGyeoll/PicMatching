@@ -25,20 +25,20 @@ export function ServiceCard({
           />
         ) : null}
       </div>
-      <div className="line-clamp-1 text-xs font-semibold text-stone-900">
+      <div className="line-clamp-1 text-sm font-semibold text-stone-900">
         {service.title}
       </div>
       {variant === "grid" ? (
-        <div className="text-[11px] text-stone-400">
+        <div className="text-xs text-stone-400">
           {service.photographerName}
           {service.areas[0] ? ` · ${service.areas[0]}` : ""} · 후기 아직 없음
         </div>
       ) : (
-        <div className="text-[11px] text-stone-400">
+        <div className="text-xs text-stone-400">
           {service.durationMinutes}분
         </div>
       )}
-      <div className="text-sm font-bold text-stone-900">
+      <div className="text-base font-bold text-stone-900">
         {service.price.toLocaleString()}원
       </div>
     </Link>

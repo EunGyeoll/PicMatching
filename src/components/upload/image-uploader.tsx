@@ -145,7 +145,7 @@ export function ImageUploader({
         className="hidden"
       />
 
-      {error ? <p className="text-xs text-red-600">{error}</p> : null}
+      {error ? <p className="text-sm text-red-600">{error}</p> : null}
     </div>
   );
 }

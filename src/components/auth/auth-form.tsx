@@ -31,10 +31,10 @@ export function AuthForm({
     return (
       <div className="flex flex-col items-center gap-3 rounded-lg border border-stone-200 px-6 py-10 text-center">
         <Mail className="size-8 text-stone-400" />
-        <p className="text-sm font-medium text-stone-900">
+        <p className="text-base font-medium text-stone-900">
           가입 확인 이메일을 보냈습니다.
         </p>
-        <p className="text-sm text-stone-500">
+        <p className="text-base text-stone-500">
           메일함에서 인증 링크를 눌러 가입을 완료해주세요.
         </p>
       </div>
@@ -49,7 +49,7 @@ export function AuthForm({
         aria-expanded={expanded}
         className="flex w-full items-center justify-between rounded-xl bg-stone-100 px-4 py-3.5"
       >
-        <span className="flex items-center gap-2 text-sm font-medium text-stone-700">
+        <span className="flex items-center gap-2 text-base font-medium text-stone-700">
           <Mail className="size-4 text-stone-500" />
           {mode === "signup" ? "이메일로 회원가입" : "이메일로 로그인"}
         </span>
@@ -76,7 +76,7 @@ export function AuthForm({
                 autoComplete="email"
                 placeholder="이메일"
                 required
-                className="w-full rounded-xl bg-stone-100 px-4 py-3.5 text-sm text-stone-900 outline-none placeholder:text-stone-400 focus:ring-2 focus:ring-stone-300"
+                className="w-full rounded-xl bg-stone-100 px-4 py-3.5 text-base text-stone-900 outline-none placeholder:text-stone-400 focus:ring-2 focus:ring-stone-300"
               />
             </div>
 
@@ -92,7 +92,7 @@ export function AuthForm({
                   autoComplete={mode === "signup" ? "new-password" : "current-password"}
                   placeholder="비밀번호"
                   required
-                  className="w-full rounded-xl bg-stone-100 px-4 py-3.5 pr-11 text-sm text-stone-900 outline-none placeholder:text-stone-400 focus:ring-2 focus:ring-stone-300"
+                  className="w-full rounded-xl bg-stone-100 px-4 py-3.5 pr-11 text-base text-stone-900 outline-none placeholder:text-stone-400 focus:ring-2 focus:ring-stone-300"
                 />
                 <button
                   type="button"
@@ -110,7 +110,7 @@ export function AuthForm({
             </div>
 
             {state.error ? (
-              <p role="alert" className="text-sm text-red-600">
+              <p role="alert" className="text-base text-red-600">
                 {state.error}
               </p>
             ) : null}
@@ -118,7 +118,7 @@ export function AuthForm({
             <button
               type="submit"
               disabled={pending}
-              className="mt-1 w-full rounded-full bg-stone-900 py-3.5 text-sm font-medium text-white transition-opacity disabled:opacity-50"
+              className="mt-1 w-full rounded-full bg-stone-900 py-3.5 text-base font-medium text-white transition-opacity disabled:opacity-50"
             >
               {pending
                 ? "처리 중..."

@@ -24,7 +24,7 @@ export function BottomNavigation() {
           <Link
             key={item.href}
             href={item.href}
-            className={`flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] ${
+            className={`flex flex-1 flex-col items-center gap-1 py-2.5 text-xs ${
               active ? "font-semibold text-stone-900" : "text-stone-400"
             }`}
           >
