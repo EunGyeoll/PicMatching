@@ -37,6 +37,9 @@ export function ServiceForm({
       : null,
   );
   const [duration, setDuration] = useState<number>(initial?.durationMinutes ?? 60);
+  const [bufferAfterMinutes, setBufferAfterMinutes] = useState<number>(
+    initial?.bufferAfterMinutes ?? 0,
+  );
   const [customDuration, setCustomDuration] = useState(
     initial ? !DURATION_OPTIONS.includes(initial.durationMinutes as (typeof DURATION_OPTIONS)[number]) : false,
   );
@@ -82,7 +85,6 @@ export function ServiceForm({
         <input type="hidden" name="serviceId" value={serviceId} />
         <input type="hidden" name="coverImagePath" value={coverImage?.path ?? ""} />
         <input type="hidden" name="durationMinutes" value={duration} />
-        <input type="hidden" name="bufferAfterMinutes" value={initial?.bufferAfterMinutes ?? 15} />
         <input type="hidden" name="isPublished" value={isPublished ? "on" : ""} />
         {areas.map((area) => (
           <input key={area} type="hidden" name="areas" value={area} />
@@ -176,6 +178,29 @@ export function ServiceForm({
                 className="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             ) : null}
+          </Field>
+
+          <Field label="촬영 후 정리 시간">
+            <div className="flex flex-wrap gap-1.5">
+              {[0, 30, 60].map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => setBufferAfterMinutes(option)}
+                  className={`rounded-full border px-3 py-1.5 text-xs ${
+                    bufferAfterMinutes === option
+                      ? "border-stone-900 bg-stone-900 text-white"
+                      : "border-stone-200 text-stone-600"
+                  }`}
+                >
+                  {option === 0 ? "없음" : `${option}분`}
+                </button>
+              ))}
+            </div>
+            <input type="hidden" name="bufferAfterMinutes" value={bufferAfterMinutes} />
+            <p className="mt-1 text-[11px] text-stone-400">
+              촬영 종료 후 다음 예약을 받기 전 이동·정리에 필요한 여유 시간이에요.
+            </p>
           </Field>
         </Section>
 
