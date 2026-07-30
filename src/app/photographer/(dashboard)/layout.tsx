@@ -25,7 +25,7 @@ export default async function PhotographerDashboardLayout({
           <Link
             key={item.href}
             href={item.href}
-            className="shrink-0 px-3 py-3 text-sm font-semibold text-stone-500"
+            className="shrink-0 px-3 py-3 text-xs font-semibold text-stone-500"
           >
             {item.label}
           </Link>

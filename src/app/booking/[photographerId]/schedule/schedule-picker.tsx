@@ -64,7 +64,7 @@ export function SchedulePicker({ photographerId }: { photographerId: string }) {
       <BookingStepHeader title="날짜와 시간" step={2} />
 
       <div className="flex flex-col gap-2.5 border-b border-stone-100 p-4">
-        <h2 className="text-sm font-bold text-stone-400">날짜</h2>
+        <h2 className="text-xs font-bold text-stone-400">날짜</h2>
         <div className="flex gap-1.5 overflow-x-auto pb-1">
           {DATES.map((date) => {
             const { dow, day } = formatDateChip(date);
@@ -83,9 +83,9 @@ export function SchedulePicker({ photographerId }: { photographerId: string }) {
                     : "border-stone-200 text-stone-500"
                 }`}
               >
-                <span className="text-xs text-stone-400">{dow}</span>
+                <span className="text-[9.5px] text-stone-400">{dow}</span>
                 <span
-                  className={`mt-0.5 text-base font-bold ${active ? "text-stone-900" : "text-stone-600"}`}
+                  className={`mt-0.5 text-sm font-bold ${active ? "text-stone-900" : "text-stone-600"}`}
                 >
                   {day}
                 </span>
@@ -96,9 +96,9 @@ export function SchedulePicker({ photographerId }: { photographerId: string }) {
       </div>
 
       <div className="flex flex-col gap-2.5 border-b border-stone-100 p-4">
-        <h2 className="text-sm font-bold text-stone-400">시작 시간</h2>
+        <h2 className="text-xs font-bold text-stone-400">시작 시간</h2>
         {loading ? (
-          <p className="py-6 text-center text-sm text-stone-400">
+          <p className="py-6 text-center text-xs text-stone-400">
             예약 가능한 시간을 확인하는 중...
           </p>
         ) : slots.length > 0 ? (
@@ -108,7 +108,7 @@ export function SchedulePicker({ photographerId }: { photographerId: string }) {
                 key={time}
                 type="button"
                 onClick={() => setSelectedTime(time)}
-                className={`rounded-lg border py-2.5 text-center text-sm font-semibold ${
+                className={`rounded-lg border py-2.5 text-center text-xs font-semibold ${
                   time === selectedTime
                     ? "border-stone-900 bg-stone-900 text-white"
                     : "border-stone-200 text-stone-700"
@@ -119,7 +119,7 @@ export function SchedulePicker({ photographerId }: { photographerId: string }) {
             ))}
           </div>
         ) : (
-          <p className="py-6 text-center text-sm text-stone-400">
+          <p className="py-6 text-center text-xs text-stone-400">
             이 날짜엔 예약 가능한 시간이 없어요. 다른 날짜를 선택해주세요.
           </p>
         )}
@@ -127,13 +127,13 @@ export function SchedulePicker({ photographerId }: { photographerId: string }) {
 
       {selectedTime ? (
         <div className="flex flex-col gap-2 p-4">
-          <div className="flex justify-between rounded-lg bg-stone-50 px-3 py-2.5 text-sm">
+          <div className="flex justify-between rounded-lg bg-stone-50 px-3 py-2.5 text-xs">
             <span className="text-stone-500">촬영 시간</span>
             <span className="font-bold text-stone-900">
               {store.durationMinutes}분
             </span>
           </div>
-          <div className="flex justify-between rounded-lg bg-stone-50 px-3 py-2.5 text-sm">
+          <div className="flex justify-between rounded-lg bg-stone-50 px-3 py-2.5 text-xs">
             <span className="text-stone-500">예상 시간</span>
             <span className="font-bold text-stone-900">
               {selectedTime} – {endTime}
@@ -147,7 +147,7 @@ export function SchedulePicker({ photographerId }: { photographerId: string }) {
           type="button"
           onClick={handleNext}
           disabled={!selectedTime}
-          className="w-full rounded-lg bg-stone-900 py-3.5 text-base font-bold text-white disabled:opacity-40"
+          className="w-full rounded-lg bg-stone-900 py-3.5 text-sm font-bold text-white disabled:opacity-40"
         >
           다음: 장소 선택
         </button>

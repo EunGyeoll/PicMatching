@@ -15,7 +15,7 @@ export default async function PhotographerServicesPage() {
         <h1 className="text-base font-bold text-stone-900">내 서비스</h1>
         <Link
           href="/photographer/services/new"
-          className="rounded-full bg-stone-900 px-3 py-2 text-xs font-bold text-white"
+          className="rounded-full bg-stone-900 px-3 py-2 text-[11.5px] font-bold text-white"
         >
           + 새 서비스 등록
         </Link>
@@ -48,7 +48,7 @@ export default async function PhotographerServicesPage() {
               <div className="flex flex-1 min-w-0 flex-col gap-1">
                 <div className="flex items-center gap-1.5">
                   <span
-                    className={`rounded-full px-2 py-0.5 text-xs font-bold ${
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
                       service.isPublished
                         ? "bg-emerald-50 text-emerald-700"
                         : "bg-stone-100 text-stone-400"
@@ -57,10 +57,10 @@ export default async function PhotographerServicesPage() {
                     {service.isPublished ? "공개중" : "비공개"}
                   </span>
                 </div>
-                <span className="truncate text-sm font-bold text-stone-900">
+                <span className="truncate text-[12.5px] font-bold text-stone-900">
                   {service.title}
                 </span>
-                <div className="text-xs text-stone-400">
+                <div className="text-[11px] text-stone-400">
                   {service.price.toLocaleString()}원 · {service.durationMinutes}분
                 </div>
                 <ServiceRowActions serviceId={service.id} isPublished={service.isPublished} />

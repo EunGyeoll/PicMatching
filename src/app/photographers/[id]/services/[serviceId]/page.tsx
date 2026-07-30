@@ -19,7 +19,7 @@ export default async function ServiceDetailPage({
         <h1 className="text-lg font-semibold text-stone-900">
           촬영 서비스를 찾을 수 없어요
         </h1>
-        <Link href={`/photographers/${id}`} className="text-base text-stone-900 underline">
+        <Link href={`/photographers/${id}`} className="text-sm text-stone-900 underline">
           촬영자 프로필로 돌아가기
         </Link>
       </main>
@@ -60,19 +60,19 @@ export default async function ServiceDetailPage({
                 className="object-cover"
               />
             ) : (
-              <span className="flex size-full items-center justify-center text-xs font-semibold text-stone-400">
+              <span className="flex size-full items-center justify-center text-[10px] font-semibold text-stone-400">
                 {photographer.displayName.slice(0, 1)}
               </span>
             )}
           </div>
-          <span className="min-w-0 truncate text-sm font-medium text-stone-500">
+          <span className="min-w-0 truncate text-xs font-medium text-stone-500">
             {photographer.displayName}
           </span>
         </Link>
         <h1 className="text-base font-bold wrap-break-word text-stone-900">{service.title}</h1>
-        <div className="text-base font-extrabold text-stone-900">
+        <div className="text-sm font-extrabold text-stone-900">
           {service.price.toLocaleString()}원{" "}
-          <span className="text-sm font-medium text-stone-400">
+          <span className="text-xs font-medium text-stone-400">
             · {service.durationMinutes}분
           </span>
         </div>
@@ -81,7 +81,7 @@ export default async function ServiceDetailPage({
             {service.tags.map((tag) => (
               <span
                 key={tag}
-                className="rounded-full bg-stone-100 px-2.5 py-0.5 text-xs text-stone-600"
+                className="rounded-full bg-stone-100 px-2.5 py-0.5 text-[10.5px] text-stone-600"
               >
                 {tag}
               </span>
@@ -91,14 +91,14 @@ export default async function ServiceDetailPage({
       </div>
 
       <div className="flex flex-col gap-1.5 border-b border-stone-100 p-4">
-        <h2 className="text-sm font-bold text-stone-400">상세 설명</h2>
-        <p className="text-sm leading-relaxed whitespace-pre-line text-stone-700">
+        <h2 className="text-xs font-bold text-stone-400">상세 설명</h2>
+        <p className="text-[12.5px] leading-relaxed whitespace-pre-line text-stone-700">
           {service.description}
         </p>
       </div>
 
-      <div className="flex flex-col gap-2 border-b border-stone-100 p-4 text-sm">
-        <h2 className="text-sm font-bold text-stone-400">포함 사항</h2>
+      <div className="flex flex-col gap-2 border-b border-stone-100 p-4 text-[12px]">
+        <h2 className="text-xs font-bold text-stone-400">포함 사항</h2>
         <Row k="포함 사항" v={service.inclusions ?? "안내 없음"} />
         <Row
           k="보정본"
@@ -124,14 +124,14 @@ export default async function ServiceDetailPage({
 
       <div className="fixed inset-x-0 bottom-0 mx-auto flex max-w-120 items-center justify-between border-t border-stone-200 bg-white px-4 py-3 pb-[max(12px,env(safe-area-inset-bottom))]">
         <div className="flex flex-col">
-          <span className="text-xs text-stone-400">가격</span>
-          <span className="text-base font-extrabold text-stone-900">
+          <span className="text-[10px] text-stone-400">가격</span>
+          <span className="text-[15px] font-extrabold text-stone-900">
             {service.price.toLocaleString()}원
           </span>
         </div>
         <Link
           href={`/booking/${id}/service?service=${service.id}`}
-          className="rounded-lg bg-stone-900 px-5 py-3 text-sm font-bold text-white"
+          className="rounded-lg bg-stone-900 px-5 py-3 text-[13px] font-bold text-white"
         >
           이 서비스로 예약하기
         </Link>

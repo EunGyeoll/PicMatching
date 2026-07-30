@@ -105,7 +105,7 @@ export function ServiceForm({
               value={fields.title}
               onChange={(e) => setField("title", e.target.value)}
               placeholder="예: 서울숲 자연광 감성 스냅"
-              className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
+              className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
             />
           </Field>
 
@@ -133,7 +133,7 @@ export function ServiceForm({
               value={fields.price}
               onChange={(e) => setField("price", e.target.value)}
               placeholder="90000"
-              className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
+              className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
             />
           </Field>
 
@@ -147,7 +147,7 @@ export function ServiceForm({
                     setDuration(option);
                     setCustomDuration(false);
                   }}
-                  className={`rounded-full border px-3 py-1.5 text-sm ${
+                  className={`rounded-full border px-3 py-1.5 text-xs ${
                     !customDuration && duration === option
                       ? "border-stone-900 bg-stone-900 text-white"
                       : "border-stone-200 text-stone-600"
@@ -159,7 +159,7 @@ export function ServiceForm({
               <button
                 type="button"
                 onClick={() => setCustomDuration(true)}
-                className={`rounded-full border px-3 py-1.5 text-sm ${
+                className={`rounded-full border px-3 py-1.5 text-xs ${
                   customDuration
                     ? "border-stone-900 bg-stone-900 text-white"
                     : "border-stone-200 text-stone-600"
@@ -175,7 +175,7 @@ export function ServiceForm({
                 max={600}
                 value={duration}
                 onChange={(e) => setDuration(Number(e.target.value))}
-                className="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
+                className="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             ) : null}
           </Field>
@@ -187,7 +187,7 @@ export function ServiceForm({
                   key={option}
                   type="button"
                   onClick={() => setBufferAfterMinutes(option)}
-                  className={`rounded-full border px-3 py-1.5 text-sm ${
+                  className={`rounded-full border px-3 py-1.5 text-xs ${
                     bufferAfterMinutes === option
                       ? "border-stone-900 bg-stone-900 text-white"
                       : "border-stone-200 text-stone-600"
@@ -198,7 +198,7 @@ export function ServiceForm({
               ))}
             </div>
             <input type="hidden" name="bufferAfterMinutes" value={bufferAfterMinutes} />
-            <p className="mt-1 text-xs text-stone-400">
+            <p className="mt-1 text-[11px] text-stone-400">
               촬영 종료 후 다음 예약을 받기 전 이동·정리에 필요한 여유 시간이에요.
             </p>
           </Field>
@@ -213,7 +213,7 @@ export function ServiceForm({
               value={fields.description}
               onChange={(e) => setField("description", e.target.value)}
               placeholder="촬영 장소, 분위기, 진행 방식 등을 소개해주세요"
-              className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
+              className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
             />
           </Field>
 
@@ -224,7 +224,7 @@ export function ServiceForm({
               value={fields.inclusions}
               onChange={(e) => setField("inclusions", e.target.value)}
               placeholder="예: 보정본 20장, 촬영 장소 이동 1회 포함"
-              className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
+              className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
             />
           </Field>
 
@@ -235,7 +235,7 @@ export function ServiceForm({
                   key={area}
                   type="button"
                   onClick={() => toggleValue(areas, area, setAreas)}
-                  className={`rounded-full border px-3 py-1.5 text-sm ${
+                  className={`rounded-full border px-3 py-1.5 text-xs ${
                     areas.includes(area)
                       ? "border-stone-900 bg-stone-900 text-white"
                       : "border-stone-200 text-stone-600"
@@ -254,7 +254,7 @@ export function ServiceForm({
                   key={tag.id}
                   type="button"
                   onClick={() => toggleValue(purposeIds, tag.id, setPurposeIds)}
-                  className={`rounded-full border px-3 py-1.5 text-sm ${
+                  className={`rounded-full border px-3 py-1.5 text-xs ${
                     purposeIds.includes(tag.id)
                       ? "border-stone-900 bg-stone-900 text-white"
                       : "border-stone-200 text-stone-600"
@@ -273,7 +273,7 @@ export function ServiceForm({
                   key={tag.id}
                   type="button"
                   onClick={() => toggleValue(moodIds, tag.id, setMoodIds)}
-                  className={`rounded-full border px-3 py-1.5 text-sm ${
+                  className={`rounded-full border px-3 py-1.5 text-xs ${
                     moodIds.includes(tag.id)
                       ? "border-stone-900 bg-stone-900 text-white"
                       : "border-stone-200 text-stone-600"
@@ -287,7 +287,7 @@ export function ServiceForm({
         </Section>
 
         <details className="rounded-lg border border-stone-200 px-4 py-3" open={mode === "edit"}>
-          <summary className="cursor-pointer text-sm font-bold text-stone-500">
+          <summary className="cursor-pointer text-xs font-bold text-stone-500">
             선택 정보 더보기 (보정본 수 · 원본 제공 · 전달 기간 · 최대 인원 · 추가 비용 등)
           </summary>
           <div className="mt-4 flex flex-col gap-4">
@@ -298,10 +298,10 @@ export function ServiceForm({
                 min={0}
                 value={fields.retouchedPhotoCount}
                 onChange={(e) => setField("retouchedPhotoCount", e.target.value)}
-                className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
+                className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
-            <label className="flex items-center gap-2 text-sm text-stone-600">
+            <label className="flex items-center gap-2 text-xs text-stone-600">
               <input
                 type="checkbox"
                 name="providesRawFiles"
@@ -311,7 +311,7 @@ export function ServiceForm({
               />
               보정 전 원본 제공
             </label>
-            <label className="flex items-center gap-2 text-sm text-stone-600">
+            <label className="flex items-center gap-2 text-xs text-stone-600">
               <input
                 type="checkbox"
                 name="providesAllRawFiles"
@@ -328,7 +328,7 @@ export function ServiceForm({
                 min={0}
                 value={fields.deliveryDays}
                 onChange={(e) => setField("deliveryDays", e.target.value)}
-                className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
+                className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
             <Field label="최대 촬영 인원">
@@ -338,10 +338,10 @@ export function ServiceForm({
                 min={1}
                 value={fields.maxParticipants}
                 onChange={(e) => setField("maxParticipants", e.target.value)}
-                className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
+                className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
-            <label className="flex items-center gap-2 text-sm text-stone-600">
+            <label className="flex items-center gap-2 text-xs text-stone-600">
               <input
                 type="checkbox"
                 name="allowsOutfitChange"
@@ -356,7 +356,7 @@ export function ServiceForm({
                 name="recommendedFor"
                 value={fields.recommendedFor}
                 onChange={(e) => setField("recommendedFor", e.target.value)}
-                className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
+                className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
             <Field label="추가 비용 발생 조건">
@@ -365,7 +365,7 @@ export function ServiceForm({
                 rows={2}
                 value={fields.extraFeeConditions}
                 onChange={(e) => setField("extraFeeConditions", e.target.value)}
-                className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
+                className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
             <Field label="장소 이동비 (원)">
@@ -375,7 +375,7 @@ export function ServiceForm({
                 min={0}
                 value={fields.travelFee}
                 onChange={(e) => setField("travelFee", e.target.value)}
-                className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
+                className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
             <Field label="야간 촬영 추가 비용 (원)">
@@ -385,7 +385,7 @@ export function ServiceForm({
                 min={0}
                 value={fields.nightSurcharge}
                 onChange={(e) => setField("nightSurcharge", e.target.value)}
-                className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
+                className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
             <Field label="주말 추가 비용 (원)">
@@ -395,7 +395,7 @@ export function ServiceForm({
                 min={0}
                 value={fields.weekendSurcharge}
                 onChange={(e) => setField("weekendSurcharge", e.target.value)}
-                className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
+                className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
             <Field label="기타 안내사항">
@@ -404,14 +404,14 @@ export function ServiceForm({
                 rows={2}
                 value={fields.notes}
                 onChange={(e) => setField("notes", e.target.value)}
-                className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
+                className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </Field>
           </div>
         </details>
 
         <div className="flex items-center justify-between rounded-lg border border-stone-200 px-4 py-3">
-          <span className="text-sm font-bold text-stone-700">탐색 화면에 공개</span>
+          <span className="text-xs font-bold text-stone-700">탐색 화면에 공개</span>
           <button
             type="button"
             role="switch"
@@ -428,7 +428,7 @@ export function ServiceForm({
         </div>
 
         {state.error ? (
-          <p className="text-sm text-red-600" role="alert">
+          <p className="text-xs text-red-600" role="alert">
             {state.error}
           </p>
         ) : null}
@@ -437,7 +437,7 @@ export function ServiceForm({
           <button
             type="submit"
             disabled={pending}
-            className="w-full rounded-lg bg-stone-900 py-3.5 text-base font-bold text-white disabled:opacity-40"
+            className="w-full rounded-lg bg-stone-900 py-3.5 text-sm font-bold text-white disabled:opacity-40"
           >
             {pending ? "저장 중..." : "저장"}
           </button>
@@ -450,7 +450,7 @@ export function ServiceForm({
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-sm font-bold text-stone-400 uppercase">{title}</h2>
+      <h2 className="text-xs font-bold text-stone-400 uppercase">{title}</h2>
       {children}
     </div>
   );
@@ -467,7 +467,7 @@ function Field({
 }) {
   return (
     <label className="flex flex-col gap-1.5">
-      <span className="text-sm font-bold text-stone-500">
+      <span className="text-xs font-bold text-stone-500">
         {label}
         {required ? <span className="text-stone-400"> · 필수</span> : null}
       </span>

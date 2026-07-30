@@ -36,7 +36,7 @@ export function ServiceRowActions({
       <div className="flex gap-3">
         <Link
           href={`/photographer/services/${serviceId}/edit`}
-          className="text-xs font-semibold text-stone-600 underline"
+          className="text-[11px] font-semibold text-stone-600 underline"
         >
           수정
         </Link>
@@ -44,7 +44,7 @@ export function ServiceRowActions({
           type="button"
           disabled={pending}
           onClick={handleTogglePublish}
-          className="text-xs font-semibold text-stone-600 underline disabled:opacity-40"
+          className="text-[11px] font-semibold text-stone-600 underline disabled:opacity-40"
         >
           {isPublished ? "비공개로 전환" : "공개로 전환"}
         </button>
@@ -52,12 +52,12 @@ export function ServiceRowActions({
           type="button"
           disabled={pending}
           onClick={handleDelete}
-          className="text-xs font-semibold text-red-600 underline disabled:opacity-40"
+          className="text-[11px] font-semibold text-red-600 underline disabled:opacity-40"
         >
           삭제
         </button>
       </div>
-      {error ? <p className="text-xs text-red-600">{error}</p> : null}
+      {error ? <p className="text-[10.5px] text-red-600">{error}</p> : null}
     </div>
   );
 }

@@ -34,7 +34,7 @@ export function BookingActions({
           type="button"
           disabled={pending}
           onClick={() => run(confirmBookingAction)}
-          className="min-h-11 rounded-full bg-stone-900 px-3 text-xs font-bold text-white disabled:opacity-40"
+          className="min-h-11 rounded-full bg-stone-900 px-3 text-[11px] font-bold text-white disabled:opacity-40"
         >
           승인
         </button>
@@ -42,7 +42,7 @@ export function BookingActions({
           type="button"
           disabled={pending}
           onClick={() => run(rejectBookingAction)}
-          className="min-h-11 rounded-full border border-stone-300 px-3 text-xs font-semibold text-stone-600 disabled:opacity-40"
+          className="min-h-11 rounded-full border border-stone-300 px-3 text-[11px] font-semibold text-stone-600 disabled:opacity-40"
         >
           거절
         </button>
@@ -54,7 +54,7 @@ export function BookingActions({
         type="button"
         disabled={pending}
         onClick={() => run(completeBookingAction)}
-        className="min-h-11 self-start rounded-full border border-stone-300 px-3 text-xs font-semibold text-stone-600 disabled:opacity-40"
+        className="min-h-11 self-start rounded-full border border-stone-300 px-3 text-[11px] font-semibold text-stone-600 disabled:opacity-40"
       >
         촬영 완료로 표시
       </button>
@@ -66,7 +66,7 @@ export function BookingActions({
   return (
     <div className="mt-2 flex flex-col gap-1">
       {buttons}
-      {error ? <p className="text-xs text-red-600">{error}</p> : null}
+      {error ? <p className="text-[10.5px] text-red-600">{error}</p> : null}
     </div>
   );
 }

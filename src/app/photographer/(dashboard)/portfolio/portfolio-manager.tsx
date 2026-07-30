@@ -34,7 +34,7 @@ export function PortfolioManager({
   return (
     <main className="mx-auto max-w-120 px-4 py-6">
       <h1 className="text-base font-bold text-stone-900">포트폴리오 관리</h1>
-      <p className="mt-1 text-sm text-stone-500">사진을 추가하거나 삭제할 수 있어요</p>
+      <p className="mt-1 text-xs text-stone-500">사진을 추가하거나 삭제할 수 있어요</p>
 
       <div className="mt-4">
         <ImageUploader
@@ -50,7 +50,7 @@ export function PortfolioManager({
         />
       </div>
 
-      {error ? <p className="mt-2 text-sm text-red-600">{error}</p> : null}
+      {error ? <p className="mt-2 text-xs text-red-600">{error}</p> : null}
     </main>
   );
 }

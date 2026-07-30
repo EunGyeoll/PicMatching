@@ -24,7 +24,7 @@ export default async function BookingServicePage({
         <h1 className="text-lg font-semibold text-stone-900">
           예약할 수 있는 서비스가 없어요
         </h1>
-        <p className="text-base text-stone-500">
+        <p className="text-sm text-stone-500">
           촬영자가 아직 공개한 촬영 서비스가 없습니다.
         </p>
       </main>

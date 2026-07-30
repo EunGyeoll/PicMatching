@@ -31,7 +31,7 @@ export function KakaoLoginButton({ next }: { next: string }) {
         type="button"
         onClick={handleClick}
         disabled={pending}
-        className="relative flex w-full items-center justify-center rounded-full bg-[#FEE500] py-3.5 text-base font-medium text-[#191600] transition-opacity disabled:opacity-50"
+        className="relative flex w-full items-center justify-center rounded-full bg-[#FEE500] py-3.5 text-sm font-medium text-[#191600] transition-opacity disabled:opacity-50"
       >
         <svg
           viewBox="0 0 24 24"
@@ -43,7 +43,7 @@ export function KakaoLoginButton({ next }: { next: string }) {
         {pending ? "연결 중..." : "카카오로 3초 시작하기"}
       </button>
       {error ? (
-        <p role="alert" className="text-base text-red-600">
+        <p role="alert" className="text-sm text-red-600">
           {error}
         </p>
       ) : null}

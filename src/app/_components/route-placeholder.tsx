@@ -14,7 +14,7 @@ export function RoutePlaceholder({
     <main className="mx-auto flex min-h-dvh max-w-120 flex-col items-center justify-center gap-2 px-6 text-center">
       <h1 className="text-xl font-semibold">{title}</h1>
       {description ? (
-        <p className="text-base text-neutral-500">{description}</p>
+        <p className="text-sm text-neutral-500">{description}</p>
       ) : null}
     </main>
   );

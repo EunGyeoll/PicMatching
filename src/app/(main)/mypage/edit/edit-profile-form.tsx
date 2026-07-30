@@ -28,7 +28,7 @@ export function EditProfileForm({
       <input type="hidden" name="avatarUrl" value={avatar?.url ?? ""} />
 
       <div className="flex flex-col gap-1.5">
-        <span className="text-base font-medium text-stone-700">프로필 사진</span>
+        <span className="text-sm font-medium text-stone-700">프로필 사진</span>
         <ImageUploader
           bucket="avatars"
           shape="circle"
@@ -44,7 +44,7 @@ export function EditProfileForm({
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="nickname" className="text-base font-medium text-stone-700">
+        <label htmlFor="nickname" className="text-sm font-medium text-stone-700">
           닉네임
         </label>
         <input
@@ -53,12 +53,12 @@ export function EditProfileForm({
           defaultValue={defaultNickname}
           required
           maxLength={30}
-          className="w-full rounded-md border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
+          className="w-full rounded-md border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="phone" className="text-base font-medium text-stone-700">
+        <label htmlFor="phone" className="text-sm font-medium text-stone-700">
           연락처
         </label>
         <input
@@ -67,17 +67,17 @@ export function EditProfileForm({
           defaultValue={defaultPhone}
           maxLength={20}
           placeholder="선택 입력"
-          className="w-full rounded-md border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
+          className="w-full rounded-md border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
         />
       </div>
 
       {state.error ? (
-        <p role="alert" className="text-base text-red-600">
+        <p role="alert" className="text-sm text-red-600">
           {state.error}
         </p>
       ) : null}
       {state.success ? (
-        <p role="status" className="text-base text-emerald-600">
+        <p role="status" className="text-sm text-emerald-600">
           저장되었습니다.
         </p>
       ) : null}
@@ -85,7 +85,7 @@ export function EditProfileForm({
       <button
         type="submit"
         disabled={pending}
-        className="rounded-md bg-stone-900 py-3 text-base font-medium text-white disabled:opacity-50"
+        className="rounded-md bg-stone-900 py-3 text-sm font-medium text-white disabled:opacity-50"
       >
         {pending ? "저장 중..." : "저장"}
       </button>

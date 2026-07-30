@@ -14,9 +14,9 @@ export function EmptyState({
   return (
     <div className="flex flex-col items-center gap-2 px-6 py-16 text-center">
       {icon ? <div className="text-2xl opacity-50">{icon}</div> : null}
-      <p className="text-base font-semibold text-stone-700">{title}</p>
+      <p className="text-sm font-semibold text-stone-700">{title}</p>
       {description ? (
-        <p className="text-sm text-stone-400">{description}</p>
+        <p className="text-xs text-stone-400">{description}</p>
       ) : null}
       {action}
     </div>

@@ -26,7 +26,7 @@ export function ExploreFilterTabs({
             key={category.key}
             type="button"
             onClick={() => setOpenKey(openKey === category.key ? null : category.key)}
-            className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold ${
+            className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ${
               openKey === category.key
                 ? "bg-stone-900 text-white"
                 : category.hasActiveSelection

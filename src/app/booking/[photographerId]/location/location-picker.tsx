@@ -91,7 +91,7 @@ export function LocationPicker({
             key={value}
             type="button"
             onClick={() => setTab(value)}
-            className={`shrink-0 whitespace-nowrap rounded-full border px-3 py-1.5 text-xs ${
+            className={`shrink-0 whitespace-nowrap rounded-full border px-3 py-1.5 text-[11.5px] ${
               tab === value
                 ? "border-stone-800 bg-stone-800 font-semibold text-white"
                 : "border-stone-200 text-stone-600"
@@ -128,15 +128,15 @@ export function LocationPicker({
                   ) : null}
                 </div>
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-sm font-bold text-stone-900">
+                  <span className="text-[12.5px] font-bold text-stone-900">
                     {location.name}
                   </span>
-                  <span className="text-xs text-stone-400">
+                  <span className="text-[10.5px] text-stone-400">
                     {location.area}
                     {location.hasTravelFee ? " · 이동비 발생" : ""}
                   </span>
                   {location.description ? (
-                    <span className="text-xs text-stone-500">
+                    <span className="text-[10.5px] text-stone-500">
                       {location.description}
                     </span>
                   ) : null}
@@ -144,7 +144,7 @@ export function LocationPicker({
               </button>
             ))
           ) : (
-            <p className="py-10 text-center text-sm text-stone-400">
+            <p className="py-10 text-center text-xs text-stone-400">
               {tab === "recommended"
                 ? "촬영자가 등록한 추천 장소가 아직 없어요."
                 : "등록된 인기 장소가 아직 없어요."}
@@ -154,16 +154,16 @@ export function LocationPicker({
         {tab === "custom" ? (
           <div className="flex flex-col gap-3">
             <label className="flex flex-col gap-1.5">
-              <span className="text-sm font-bold text-stone-400">장소명</span>
+              <span className="text-xs font-bold text-stone-400">장소명</span>
               <input
                 value={placeName}
                 onChange={(e) => setPlaceName(e.target.value)}
                 placeholder="예: 서울숲 갤러리아포레 앞"
-                className="rounded-lg border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
+                className="rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </label>
             <label className="flex flex-col gap-1.5">
-              <span className="text-sm font-bold text-stone-400">
+              <span className="text-xs font-bold text-stone-400">
                 상세 위치 / 만남 안내
               </span>
               <textarea
@@ -171,14 +171,14 @@ export function LocationPicker({
                 onChange={(e) => setPlaceDetail(e.target.value)}
                 placeholder="예: 지하철 2호선 뚝섬역 8번 출구"
                 rows={3}
-                className="rounded-lg border border-stone-300 px-3 py-2.5 text-base outline-none focus:border-stone-500"
+                className="rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-500"
               />
             </label>
           </div>
         ) : null}
 
         {tab === "tbd" ? (
-          <p className="py-10 text-center text-sm text-stone-400">
+          <p className="py-10 text-center text-xs text-stone-400">
             예약 요청 후 촬영자와 채팅 또는 연락처로 장소를 협의해주세요.
           </p>
         ) : null}
@@ -189,7 +189,7 @@ export function LocationPicker({
           type="button"
           onClick={handleNext}
           disabled={!canProceed}
-          className="w-full rounded-lg bg-stone-900 py-3.5 text-base font-bold text-white disabled:opacity-40"
+          className="w-full rounded-lg bg-stone-900 py-3.5 text-sm font-bold text-white disabled:opacity-40"
         >
           다음: 예약 확인
         </button>

@@ -44,7 +44,7 @@ export default async function MyPage() {
           <h1 className="wrap-break-word text-xl font-semibold text-stone-900">
             {profile?.nickname ?? "내 정보"}
           </h1>
-          <p className="mt-1 text-base text-stone-500">{user.email}</p>
+          <p className="mt-1 text-sm text-stone-500">{user.email}</p>
         </div>
       </div>
 
@@ -53,7 +53,7 @@ export default async function MyPage() {
           <Link
             key={item.href}
             href={item.href}
-            className="py-4 text-base text-stone-700"
+            className="py-4 text-sm text-stone-700"
           >
             {item.label}
           </Link>
@@ -61,7 +61,7 @@ export default async function MyPage() {
       </nav>
 
       <form action={signOutAction} className="mt-8">
-        <button type="submit" className="text-base text-stone-400 underline">
+        <button type="submit" className="text-sm text-stone-400 underline">
           로그아웃
         </button>
       </form>
