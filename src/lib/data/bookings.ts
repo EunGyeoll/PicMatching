@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { getPublicStorageUrl } from "@/lib/supabase/storage";
 import type { BookingDetail, BookingListItem, PhotographerBookingItem } from "@/types/domain";
 
 export async function getBookingDetail(bookingId: string): Promise<BookingDetail | null> {
@@ -9,7 +10,8 @@ export async function getBookingDetail(bookingId: string): Promise<BookingDetail
     .select(
       `id, status, starts_at, ends_at, service_title_snapshot, location_label, location_address,
        participant_count, requests, base_price_snapshot, additional_fee_snapshot, total_price_snapshot,
-       photographer_profiles(display_name, contact_info)`,
+       photographer_profiles(display_name, contact_info),
+       shooting_services(cover_image_path, updated_at)`,
     )
     .eq("id", bookingId)
     .maybeSingle();
@@ -22,6 +24,13 @@ export async function getBookingDetail(bookingId: string): Promise<BookingDetail
     serviceTitle: data.service_title_snapshot,
     photographerName: data.photographer_profiles?.display_name ?? "",
     photographerGuidance: data.photographer_profiles?.contact_info ?? null,
+    coverImageUrl: data.shooting_services?.cover_image_path
+      ? getPublicStorageUrl(
+          "services",
+          data.shooting_services.cover_image_path,
+          data.shooting_services.updated_at,
+        )
+      : null,
     startsAt: data.starts_at,
     endsAt: data.ends_at,
     locationLabel: data.location_label,
@@ -40,7 +49,8 @@ export async function getMyBookings(customerId: string): Promise<BookingListItem
   const { data } = await supabase
     .from("bookings")
     .select(
-      `id, status, starts_at, ends_at, service_title_snapshot, photographer_profiles(display_name)`,
+      `id, status, starts_at, ends_at, service_title_snapshot, photographer_profiles(display_name),
+       shooting_services(cover_image_path, updated_at)`,
     )
     .eq("customer_id", customerId)
     .order("starts_at", { ascending: true });
@@ -50,6 +60,13 @@ export async function getMyBookings(customerId: string): Promise<BookingListItem
     status: b.status,
     serviceTitle: b.service_title_snapshot,
     photographerName: b.photographer_profiles?.display_name ?? "",
+    coverImageUrl: b.shooting_services?.cover_image_path
+      ? getPublicStorageUrl(
+          "services",
+          b.shooting_services.cover_image_path,
+          b.shooting_services.updated_at,
+        )
+      : null,
     startsAt: b.starts_at,
     endsAt: b.ends_at,
   }));

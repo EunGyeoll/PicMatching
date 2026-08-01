@@ -125,6 +125,7 @@ export type BookingListItem = {
   status: BookingStatus;
   serviceTitle: string;
   photographerName: string;
+  coverImageUrl: string | null;
   startsAt: string;
   endsAt: string;
 };

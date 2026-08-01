@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
+import { ChevronRight } from "lucide-react";
 import { requireAuthUser } from "@/lib/supabase/auth";
 import { getMyBookings } from "@/lib/data/bookings";
 import { formatBookingSchedule } from "@/lib/date-time";
@@ -30,19 +32,28 @@ export default async function BookingsPage({
       <h1 className="px-4 pt-4 text-base font-bold text-stone-900">내 예약</h1>
 
       <div className="mt-3 flex border-b border-stone-200 px-2">
-        {TABS.map((tab) => (
-          <Link
-            key={tab.key}
-            href={`/bookings?status=${tab.key}`}
-            className={`flex-1 border-b-2 py-2.5 text-center text-[12px] font-bold ${
-              activeTab.key === tab.key
-                ? "border-stone-900 text-stone-900"
-                : "border-transparent text-stone-400"
-            }`}
-          >
-            {tab.label}
-          </Link>
-        ))}
+        {TABS.map((tab) => {
+          const count = bookings.filter((b) => tab.statuses.includes(b.status)).length;
+          const active = activeTab.key === tab.key;
+          return (
+            <Link
+              key={tab.key}
+              href={`/bookings?status=${tab.key}`}
+              className={`flex flex-1 items-center justify-center gap-1.5 border-b-2 py-2.5 text-center text-sm font-bold ${
+                active ? "border-stone-900 text-stone-900" : "border-transparent text-stone-400"
+              }`}
+            >
+              {tab.label}
+              <span
+                className={`rounded-full px-1.5 text-[10px] font-bold tabular-nums ${
+                  active ? "bg-stone-900 text-white" : "bg-stone-100 text-stone-400"
+                }`}
+              >
+                {count}
+              </span>
+            </Link>
+          );
+        })}
       </div>
 
       {filtered.length === 0 ? (
@@ -53,20 +64,34 @@ export default async function BookingsPage({
             <Link
               key={booking.id}
               href={`/bookings/${booking.id}`}
-              className="flex flex-col gap-1 border-b border-stone-100 px-4 py-3"
+              className="flex items-center gap-3 border-b border-stone-100 px-4 py-3"
             >
-              <span
-                className={`self-start rounded-full px-2 py-0.5 text-[10px] font-bold ${STATUS_TONE[booking.status]}`}
-              >
-                {STATUS_LABEL[booking.status]}
-              </span>
-              <span className="text-[12.5px] font-bold text-stone-900">
-                {booking.serviceTitle}
-              </span>
-              <span className="text-[11px] text-stone-400">
-                {booking.photographerName} ·{" "}
-                {formatBookingSchedule(booking.startsAt, booking.endsAt)}
-              </span>
+              <div className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-stone-100">
+                {booking.coverImageUrl ? (
+                  <Image
+                    src={booking.coverImageUrl}
+                    alt={booking.serviceTitle}
+                    fill
+                    sizes="56px"
+                    className="object-cover"
+                  />
+                ) : null}
+              </div>
+              <div className="flex min-w-0 flex-1 flex-col gap-1">
+                <span
+                  className={`self-start rounded-full px-2 py-0.5 text-xs font-bold ${STATUS_TONE[booking.status]}`}
+                >
+                  {STATUS_LABEL[booking.status]}
+                </span>
+                <span className="truncate text-sm font-bold text-stone-900">
+                  {booking.serviceTitle}
+                </span>
+                <span className="truncate text-xs text-stone-400">
+                  {booking.photographerName} ·{" "}
+                  {formatBookingSchedule(booking.startsAt, booking.endsAt)}
+                </span>
+              </div>
+              <ChevronRight className="size-4 shrink-0 text-stone-300" />
             </Link>
           ))}
         </div>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Pencil, Heart, CalendarCheck, Camera, ChevronRight } from "lucide-react";
 import { requireAuthUser } from "@/lib/supabase/auth";
 import { createClient } from "@/lib/supabase/server";
 import { signOutAction } from "./actions";
@@ -14,13 +15,22 @@ export default async function MyPage() {
   ]);
 
   const menuItems = [
-    { href: "/mypage/edit", label: "프로필 수정" },
-    { href: "/favorites", label: "찜한 촬영자" },
-    { href: "/bookings", label: "예약 내역" },
-    photographerProfile
-      ? { href: "/photographer/dashboard", label: "촬영자 모드로 전환" }
-      : { href: "/photographer/onboarding", label: "촬영자로 활동하기" },
+    { href: "/mypage/edit", label: "프로필 수정", icon: Pencil },
+    { href: "/favorites", label: "찜한 촬영자", icon: Heart },
+    { href: "/bookings", label: "예약 내역", icon: CalendarCheck },
   ];
+
+  const modeItem = photographerProfile
+    ? {
+        href: "/photographer/dashboard",
+        label: "촬영자 모드로 전환",
+        sub: "등록한 서비스 · 예약 관리하기",
+      }
+    : {
+        href: "/photographer/onboarding",
+        label: "촬영자로 활동하기",
+        sub: "촬영 서비스를 등록하고 예약을 받아보세요",
+      };
 
   return (
     <main className="mx-auto min-h-dvh max-w-120 px-6 py-10">
@@ -53,12 +63,26 @@ export default async function MyPage() {
           <Link
             key={item.href}
             href={item.href}
-            className="py-4 text-sm text-stone-700"
+            className="flex items-center gap-3 py-4 text-sm text-stone-700"
           >
-            {item.label}
+            <item.icon className="size-4 text-stone-400" />
+            <span className="flex-1">{item.label}</span>
+            <ChevronRight className="size-4 text-stone-300" />
           </Link>
         ))}
       </nav>
+
+      <Link
+        href={modeItem.href}
+        className="mt-4 flex items-center gap-3 rounded-xl border border-stone-900 bg-stone-50 px-4 py-3.5"
+      >
+        <Camera className="size-4.5 text-stone-900" />
+        <div className="flex-1">
+          <div className="text-sm font-bold text-stone-900">{modeItem.label}</div>
+          <div className="mt-0.5 text-xs text-stone-400">{modeItem.sub}</div>
+        </div>
+        <ChevronRight className="size-4 text-stone-400" />
+      </Link>
 
       <form action={signOutAction} className="mt-8">
         <button type="submit" className="text-sm text-stone-400 underline">
